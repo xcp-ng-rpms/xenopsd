@@ -1,0 +1,14 @@
+[Unit]
+Description=VM manager for Xen using libxc
+Documentation=man:xenopsd-xc(1)
+After=xenstored.service squeezed.service message-switch.service forkexecd.service xapi-storage-script.service syslog.target
+Wants=xenstored.service squeezed.service message-switch.service forkexecd.service xapi-storage-script.service syslog.target
+
+[Service]
+EnvironmentFile=-/etc/sysconfig/xenopsd
+ExecStart=/usr/sbin/xenopsd-xc --config /etc/xenopsd.conf $XENOPSD_OPTIONS
+StandardError=null
+LimitNOFILE=4096
+
+[Install]
+WantedBy=multi-user.target

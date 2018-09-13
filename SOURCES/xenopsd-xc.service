@@ -9,6 +9,10 @@ EnvironmentFile=-/etc/sysconfig/xenopsd
 ExecStart=/usr/sbin/xenopsd-xc --config /etc/xenopsd.conf $XENOPSD_OPTIONS
 StandardError=null
 LimitNOFILE=4096
+# restart but fail if more than 5 failures in 30s
+Restart=on-failure
+StartLimitBurst=5
+StartLimitInterval=30s
 
 [Install]
 WantedBy=multi-user.target

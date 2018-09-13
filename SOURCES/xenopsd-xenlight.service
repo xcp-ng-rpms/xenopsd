@@ -8,6 +8,10 @@ Wants=xenstored.service squeezed.service message-switch.service xapi-storage-scr
 EnvironmentFile=-/etc/sysconfig/xenopsd
 ExecStart=/usr/sbin/xenopsd-xenlight --config /etc/xenopsd.conf $XENOPSD_XENLIGHT_OPTIONS
 StandardError=null
+# restart but fail if more than 5 failures in 30s
+Restart=on-failure
+StartLimitBurst=5
+StartLimitInterval=30s
 
 [Install]
 WantedBy=multi-user.target

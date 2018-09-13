@@ -1,11 +1,11 @@
 Name:           xenopsd
-Version:        0.52.1
+Version:        0.66.0
 Release:        1%{?dist}
 Summary:        Simple VM manager
 License:        LGPL
 URL:            https://github.com/xapi-project/xenopsd
 Source0:        https://code.citrite.net/rest/archive/latest/projects/XSU/repos/%{name}/archive?at=v%{version}&format=tar.gz&prefix=%{name}-%{version}#/%{name}-%{version}.tar.gz
-Provides: gitsha(https://code.citrite.net/rest/archive/latest/projects/XSU/repos/xenopsd/archive?at=v0.52.1&format=tar.gz&prefix=xenopsd-0.52.1#/xenopsd-0.52.1.tar.gz) = dcfd01eef4e0a7553cb66abab4f251d7912ae0e7
+Provides: gitsha(https://code.citrite.net/rest/archive/latest/projects/XSU/repos/xenopsd/archive?at=v0.66.0&format=tar.gz&prefix=xenopsd-0.66.0#/xenopsd-0.66.0.tar.gz) = 949825f219c28b5008ad0e87f4351d8c2d2ae8bd
 Source1:        xenopsd-xc.service
 Source2:        xenopsd-xenlight.service
 Source3:        xenopsd-simulator.service
@@ -175,8 +175,91 @@ gzip %{buildroot}%{_mandir}/man1/*.1
 %systemd_postun_with_restart xenopsd-xenlight.service
 
 %changelog
-* Tue Apr 24 2018 Christian Lindig <christian.lindig@citrix.com> - 0.52.1-0
+* Wed Jul 25 2018 Christian Lindig <christian.lindig@citrix.com> - 0.66.0-1
+- CA-290688 don't kill emu-manager on cancel, send "abort" cmd
+
+* Wed Jul 18 2018 Christian Lindig <christian.lindig@citrix.com> - 0.65.0-1
+- CA-291050: qemu: Don't unshare network namespace when hvm_serial is set
+
+* Wed Jul 11 2018 Christian Lindig <christian.lindig@citrix.com> - 0.64.0-1
+- CA-292693: use the corresponding QMP device of a cdrom userdevice
+- CA-292693: extend try-except to encompass all QMP code
+- CA-293191: Remove non-tail-recursive List.maps when reading xenstore data
+- Make dbgring.ml safe-string compliant and build it by default
+
+* Tue Jul 10 2018 Christian Lindig <christian.lindig@citrix.com> - 0.63.0-1
+- Build dbgring tool by default
+
+* Wed Jul 04 2018 Christian Lindig <christian.lindig@citrix.com> - 0.62.0-1
+- CP-24770: create QEMU disk command line in xenopsd instead of qemu-wrapper
+- CP-24770: disregard qemu_disk_cmdline when creating QEMU disk parameters
+
+* Tue Jul 03 2018 Christian Lindig <christian.lindig@citrix.com> - 0.61.0-1
+- CA-287333: Report storage backtraces in JSON, not S-expressions
+
+* Thu Jun 28 2018 Christian Lindig <christian.lindig@citrix.com> - 0.60.0-1
+- Merge of GFS2 and QEMU upstream features
+- CP-28132: Temporary hack to get the xl backend to build until it's removed
+- CP-28132: Move to new VDI.attach2 SMAPIv2 call.
+- CP-28132: attach now directly returns the xenstore directory
+- CP-28132: remove domain_uuid from attach response
+- CA-292860: Ensure MTU is set for TAP devices
+- CA-287928: Use logger for upstream QEMU logging
+- CP-23308 pass "-dm qemu" to emu-manager
+- CP-24775 remove with_dirty_log() code and calls
+- CA-290644: introduce a version number in the xenopsd persistent_t vm metadata
+- CA-290644: vm import_metadata: upgrade profile qemu-trad->qemu-upstream-compat
+- CA-290644: name the known versions of the VM persistent metadata used by xenopsd
+- CA-292656: Use qemu-upstream-compat if profile is unknown
+- CA-292873: Allow "xl destroy" to work with QEMU upstream VMs
+
+* Fri Jun 15 2018 Christian Lindig <christian.lindig@citrix.com> - 0.59.0-1
+- CA-289561: Do FLR before de-assigning device.
+- CP-28114: Don't have duplicate uuids over a migrate
+- CP-28114: Ensure we can still receive migrations from older hosts
+- CP-28114: Excise domain_selection now we'll never have the same uuid twice
+
+* Tue May 29 2018 Christian Lindig <christian.lindig@citrix.com> - 0.58.0-1
+- lib/xenopsd, xc/device_common: update interface to fd-send-recv >= 2.0.0
+- opam: update fd-send-recv bounds
+- xc: remove deprecation warnings
+
+* Thu May 24 2018 Christian Lindig <christian.lindig@citrix.com> - 0.57.0-1
+- CA-289145: Close socket if error occurs when connecting
+- CA-289887: qemu-wrapper: Detect raw disks
+- lib: make safe-string compliant
+- xc: make safe-string compliant
+- xl: make safe-string compliant
+
+* Fri May 18 2018 Christian Lindig <christian.lindig@citrix.com> - 0.56.0-1
+- travis-python-nosetests: fix tests
+
+* Thu May 10 2018 Christian Lindig <christian.lindig@citrix.com> - 0.55.0-1
+- CA-285401 use Readln module (avoid unread QMP msg)
+- CP-26583: Upgrade Xenopsd to use PPX-based IDL of RRDD
+- CP-27696: Additionally pass QEMU arguments into the upgrade script
+- CP-28088: Tell xenguest about GVT-g
+
+* Tue May 01 2018 Christian Lindig <christian.lindig@citrix.com> - 0.54.0-1
+- CA-288350 don't leak fd if QEMU startup too slow
 - CA-287881 use "raw" format for Blockdev_change_medium
+- CA-288191 VM shutdown failed when resetting VUSB
+
+* Tue Apr 24 2018 Christian Lindig <christian.lindig@citrix.com> - 0.53.0-2
+- Remove patch for CA-287881 ("raw" media format for CD change). The
+  code is now in the repository.
+
+* Mon Apr 23 2018 Christian Lindig <christian.lindig@citrix.com> - 0.53.0-1
+- CA-267368: Remove vcpu_max/shadow_multiplier/memory_static_max
+- CA-267368: Remove vcpus from non_persistent
+- CA-267368: Remove create_info from non_persistent data
+- CA-267368: Move suspend_memory_bytes into persistent data
+- CA-267368: Move qemu_vbds into persistent data
+- CA-267368: Move qemu_vifs into persistent data
+- CA-267368: Move pci_msitranslate/pci_power_mgmt into persistent data
+- CA-267368: Remove non_persistent data
+- CA-267368: Update notations of VmExtra.t data
+- CA-288207: fix finally()
 
 * Fri Apr 20 2018 Christian Lindig <christian.lindig@citrix.com> - 0.52.0-3
 - CA-288349: Raise xenopsd file descriptor limit

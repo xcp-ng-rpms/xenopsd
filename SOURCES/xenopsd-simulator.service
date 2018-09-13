@@ -8,6 +8,10 @@ Wants=message-switch.service syslog.target
 EnvironmentFile=-/etc/sysconfig/xenopsd
 ExecStart=/usr/sbin/xenopsd-simulator --config /etc/xenopsd.conf $XENOPSD_SIMULATOR_OPTIONS
 StandardError=null
+# restart but fail if more than 5 failures in 30s
+Restart=on-failure
+StartLimitBurst=5
+StartLimitInterval=30s
 
 [Install]
 WantedBy=multi-user.target

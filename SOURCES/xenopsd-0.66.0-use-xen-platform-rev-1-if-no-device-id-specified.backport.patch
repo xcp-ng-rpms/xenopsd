@@ -1,0 +1,44 @@
+Patch backported from https://github.com/xapi-project/xenopsd/commit/67e12a1d0d8f141285dfe208fc5d5ca67b6ce6fa
+
+...whose original commit detail was:
+
+From 67e12a1d0d8f141285dfe208fc5d5ca67b6ce6fa Mon Sep 17 00:00:00 2001
+From: Rob Hoes <rob.hoes@citrix.com>
+Date: Mon, 28 Jan 2019 15:07:39 +0000
+Subject: [PATCH] CA-309144: use xen platform rev 1 if no device-id specified
+
+We need to do this, because this is what qemu-trad used to do, and we need to
+provide the same virtual hardware to VMs that are migrated from previous
+releases using qemu-trad.
+
+Signed-off-by: Rob Hoes <rob.hoes@citrix.com>
+
+(end of quoted commit information)
+---
+
+diff --git a/xc/device.ml b/xc/device.ml
+index fbd289a1..e8e10a79 100644
+--- a/xc/device.ml
++++ b/xc/device.ml
+@@ -2443,15 +2443,17 @@ module Backend = struct
+         in
+         let xen_platform_device =
+           if has_platform_device then begin
+-            let device_id =
+-              try xs.Xs.read (sprintf "/local/domain/%d/platform/device_id" domid)
+-              with _ -> "0001"
++            let device_id, revision =
++              try
++                xs.Xs.read (sprintf "/local/domain/%d/platform/device_id" domid),
++                "2"
++              with _ -> "0001", "1"
+             in
+             [ "-device"; String.concat "," [
+                   "xen-platform"
+                 ; "addr=3"
+                 ; sprintf "device-id=0x%s" device_id
+-                ; "revision=0x2"
++                ; sprintf "revision=0x%s" revision
+                 ; "class-id=0x0100"
+                 ; "subvendor_id=0x5853"
+                 ; sprintf"subsystem_id=0x%s" device_id

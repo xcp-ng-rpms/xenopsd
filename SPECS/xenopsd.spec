@@ -1,6 +1,6 @@
 Name:           xenopsd
 Version:        0.66.0
-Release:        1%{?dist}
+Release:        1.1%{?dist}
 Summary:        Simple VM manager
 License:        LGPL
 URL:            https://github.com/xapi-project/xenopsd
@@ -11,6 +11,9 @@ Source2:        xenopsd-xenlight.service
 Source3:        xenopsd-simulator.service
 Source4:        xenopsd-sysconfig
 Source5:        xenopsd-64-conf
+
+# XCP-ng patches
+Patch1000:      xenopsd-0.66.0-use-xen-platform-rev-1-if-no-device-id-specified.backport.patch
 
 BuildRequires:  xs-opam-repo
 BuildRequires:  ocaml-xcp-idl-devel
@@ -177,6 +180,11 @@ gzip %{buildroot}%{_mandir}/man1/*.1
 %systemd_postun_with_restart xenopsd-xenlight.service
 
 %changelog
+* Mon Mar 04 2019 Samuel Verschelde <stormi-xcp@ylix.fr> - 0.66.0-1.1
+- Fix migration from older releases when platform:device_id is not set
+- (VMs created with the "other" template)
+- https://github.com/xcp-ng/xcp/issues/111
+
 * Wed Jul 25 2018 Christian Lindig <christian.lindig@citrix.com> - 0.66.0-1
 - CA-290688 don't kill emu-manager on cancel, send "abort" cmd
 

@@ -87,12 +87,10 @@ of interactions with xenopsd
 %autosetup -p1
 
 %build
-eval $(opam config env --root=/usr/lib/opamroot)
 ./configure --libexecdir %{_libexecdir}/%{name} %{?coverage:--enable-coverage}
 make
 
 %install
-eval $(opam config env --root=/usr/lib/opamroot)
 export OCAMLFIND_DESTDIR=%{buildroot}%{ocaml_libdir}
 export OCAMLFIND_LDCONF=ignore
 mkdir -p $OCAMLFIND_DESTDIR

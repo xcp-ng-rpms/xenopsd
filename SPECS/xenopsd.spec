@@ -1,6 +1,6 @@
 Name:           xenopsd
 Version:        0.66.0
-Release:        1.1%{?dist}
+Release:        1.2%{?dist}
 Summary:        Simple VM manager
 License:        LGPL
 URL:            https://github.com/xapi-project/xenopsd

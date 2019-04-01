@@ -1,0 +1,25 @@
+From c37d5bf1cebf6ebe75f4d8b43e8697c93c58c9e0 Mon Sep 17 00:00:00 2001
+From: Ronan Abhamon <ronan.abhamon@vates.fr>
+Date: Mon, 1 Apr 2019 10:55:15 +0200
+Subject: [PATCH 1/1] use xcp-clipboardd instead of xs-clipboardd in qemu-wrapper
+
+Signed-off-by: Ronan Abhamon <ronan.abhamon@vates.fr>
+---
+ scripts/qemu-wrapper | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/scripts/qemu-wrapper b/scripts/qemu-wrapper
+index e51d3213..87dab011 100644
+--- a/scripts/qemu-wrapper
++++ b/scripts/qemu-wrapper
+@@ -307,7 +307,7 @@ def main(argv):
+ 
+     print "Exec: %s %s" % (qemu_dm, " ".join(qemu_args))
+ 
+-    clipboardd = '/opt/xensource/libexec/xs-clipboardd'
++    clipboardd = '/opt/xensource/libexec/xcp-clipboardd'
+     subprocess.call([clipboardd, "-d", str(domid), "-s", str(s2.fileno())],
+                     preexec_fn=close_fds)
+ 
+-- 
+2.21.0

@@ -1,6 +1,6 @@
 Name:           xenopsd
 Version:        0.66.0
-Release:        1.2%{?dist}
+Release:        1.3%{?dist}
 Summary:        Simple VM manager
 License:        LGPL
 URL:            https://github.com/xapi-project/xenopsd
@@ -14,6 +14,7 @@ Source5:        xenopsd-64-conf
 
 # XCP-ng patches
 Patch1000:      xenopsd-0.66.0-use-xen-platform-rev-1-if-no-device-id-specified.backport.patch
+Patch1001:      xenopsd-0.66.0-use-xcp-clipboardd.XCP-ng.patch
 
 BuildRequires:  xs-opam-repo
 BuildRequires:  ocaml-xcp-idl-devel
@@ -178,6 +179,9 @@ gzip %{buildroot}%{_mandir}/man1/*.1
 %systemd_postun_with_restart xenopsd-xenlight.service
 
 %changelog
+* Mon Apr 01 2019 Ronan Abhamon <ronan.abhamon@vates.fr> - 0.66.0-1.3
+- Call xcp-clipboardd instead of xs-clipboardd in qemu-wrapper
+
 * Mon Mar 04 2019 Samuel Verschelde <stormi-xcp@ylix.fr> - 0.66.0-1.1
 - Fix migration from older releases when platform:device_id is not set
 - (VMs created with the "other" template)

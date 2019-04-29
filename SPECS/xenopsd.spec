@@ -1,16 +1,19 @@
 Name:           xenopsd
-Version:        0.66.0
+Version:        0.101.0
 Release:        1%{?dist}
 Summary:        Simple VM manager
 License:        LGPL
 URL:            https://github.com/xapi-project/xenopsd
-Source0:        https://code.citrite.net/rest/archive/latest/projects/XSU/repos/%{name}/archive?at=v%{version}&format=tar.gz&prefix=%{name}-%{version}#/%{name}-%{version}.tar.gz
-Provides: gitsha(https://code.citrite.net/rest/archive/latest/projects/XSU/repos/xenopsd/archive?at=v0.66.0&format=tar.gz&prefix=xenopsd-0.66.0#/xenopsd-0.66.0.tar.gz) = 949825f219c28b5008ad0e87f4351d8c2d2ae8bd
-Source1:        xenopsd-xc.service
-Source2:        xenopsd-xenlight.service
-Source3:        xenopsd-simulator.service
-Source4:        xenopsd-sysconfig
-Source5:        xenopsd-64-conf
+
+Source0: https://code.citrite.net/rest/archive/latest/projects/XSU/repos/xenopsd/archive?at=v0.101.0&format=tar.gz&prefix=xenopsd-0.101.0#/xenopsd-0.101.0.tar.gz
+Source1: SOURCES/xenopsd/xenopsd-xc.service
+Source2: SOURCES/xenopsd/xenopsd-simulator.service
+Source3: SOURCES/xenopsd/xenopsd-sysconfig
+Source4: SOURCES/xenopsd/xenopsd-64-conf
+
+
+Provides: gitsha(https://code.citrite.net/rest/archive/latest/projects/XSU/repos/xenopsd/archive?at=v0.101.0&format=tar.gz&prefix=xenopsd-0.101.0#/xenopsd-0.101.0.tar.gz) = 6dd1c2f9ca299f2132682cfa46efd27f0b35302b
+
 
 BuildRequires:  xs-opam-repo
 BuildRequires:  ocaml-xcp-idl-devel
@@ -24,7 +27,7 @@ Requires:       message-switch
 Requires:       qemu
 Requires:       xenops-cli
 Requires:       xen-dom0-tools
-Requires:       scapy
+Requires:       python2-scapy
 
 %global _use_internal_dependency_generator 0
 %global __requires_exclude *caml*
@@ -37,6 +40,7 @@ Simple VM manager for the xapi toolstack.
 
 %if 0%{?coverage:1}
 %package        cov
+Provides: gitsha(https://code.citrite.net/rest/archive/latest/projects/XSU/repos/xenopsd/archive?at=v0.101.0&format=tar.gz&prefix=xenopsd-0.101.0#/xenopsd-0.101.0.tar.gz) = 6dd1c2f9ca299f2132682cfa46efd27f0b35302b
 Summary: Xenopsd is built with coverage enabled
 %description    cov
 Xenopsd is built with coverage enabled
@@ -44,6 +48,7 @@ Xenopsd is built with coverage enabled
 %endif
 
 %package        xc
+Provides: gitsha(https://code.citrite.net/rest/archive/latest/projects/XSU/repos/xenopsd/archive?at=v0.101.0&format=tar.gz&prefix=xenopsd-0.101.0#/xenopsd-0.101.0.tar.gz) = 6dd1c2f9ca299f2132682cfa46efd27f0b35302b
 Summary:        Xenopsd using xc
 Requires:       %{name} = %{version}-%{release}
 %if 0%{?coverage:1}
@@ -56,27 +61,21 @@ Requires:       emu-manager
 Simple VM manager for Xen using libxc.
 
 %package        simulator
+Provides: gitsha(https://code.citrite.net/rest/archive/latest/projects/XSU/repos/xenopsd/archive?at=v0.101.0&format=tar.gz&prefix=xenopsd-0.101.0#/xenopsd-0.101.0.tar.gz) = 6dd1c2f9ca299f2132682cfa46efd27f0b35302b
 Summary:        Xenopsd simulator
 Requires:       %{name} = %{version}-%{release}
 %description    simulator
 A synthetic VM manager for testing.
 
-
-%package        xenlight
-Summary:        Xenopsd using libxenlight
-Requires:       %{name} = %{version}-%{release}
-
-%description    xenlight
-Simple VM manager for Xen using libxenlight
-
 %package        devel
+Provides: gitsha(https://code.citrite.net/rest/archive/latest/projects/XSU/repos/xenopsd/archive?at=v0.101.0&format=tar.gz&prefix=xenopsd-0.101.0#/xenopsd-0.101.0.tar.gz) = 6dd1c2f9ca299f2132682cfa46efd27f0b35302b
 Summary:        Xenopsd library
 
 %description    devel
 A library containing a simulator for xenopsd, for use in unit tests
 of interactions with xenopsd
 
-%global ocaml_dir    /usr/lib/opamroot/system
+%global ocaml_dir    /usr/lib/opamroot/ocaml-system
 %global ocaml_libdir %{ocaml_dir}/lib
 %global ocaml_docdir %{ocaml_dir}/doc
 
@@ -85,22 +84,19 @@ of interactions with xenopsd
 
 %build
 ./configure --libexecdir %{_libexecdir}/%{name} %{?coverage:--enable-coverage}
+echo "%{version}-%{release}" > VERSION
 make
 
 %install
-export OCAMLFIND_DESTDIR=%{buildroot}%{ocaml_libdir}
-export OCAMLFIND_LDCONF=ignore
-mkdir -p $OCAMLFIND_DESTDIR
 make install DESTDIR=%{buildroot} QEMU_WRAPPER_DIR=%{_libdir}/xen/bin LIBEXECDIR=%{_libexecdir}/%{name} SBINDIR=%{_sbindir} MANDIR=%{_mandir}
 
 # should really be in Makefile
 gzip %{buildroot}%{_mandir}/man1/*.1
 
 %{__install} -D -m 0644 %{SOURCE1} %{buildroot}%{_unitdir}/xenopsd-xc.service
-%{__install} -D -m 0644 %{SOURCE2} %{buildroot}%{_unitdir}/xenopsd-xenlight.service
-%{__install} -D -m 0644 %{SOURCE3} %{buildroot}%{_unitdir}/xenopsd-simulator.service
-%{__install} -D -m 0644 %{SOURCE4} %{buildroot}%{_sysconfdir}/sysconfig/xenopsd
-%{__install} -D -m 0644 %{SOURCE5} %{buildroot}%{_sysconfdir}/xenopsd.conf
+%{__install} -D -m 0644 %{SOURCE2} %{buildroot}%{_unitdir}/xenopsd-simulator.service
+%{__install} -D -m 0644 %{SOURCE3} %{buildroot}%{_sysconfdir}/sysconfig/xenopsd
+%{__install} -D -m 0644 %{SOURCE4} %{buildroot}%{_sysconfdir}/xenopsd.conf
 
 %files
 %doc README.md LICENSE
@@ -123,6 +119,25 @@ gzip %{buildroot}%{_mandir}/man1/*.1
 %config(noreplace) %{_sysconfdir}/sysconfig/xenopsd
 %config(noreplace) %{_sysconfdir}/xenopsd.conf
 
+%exclude %{ocaml_dir}/bin/dbgring
+%exclude %{ocaml_dir}/bin/fence.bin
+%exclude %{ocaml_dir}/bin/set-domain-uuid
+%exclude %{ocaml_dir}/bin/xenopsd-simulator
+%exclude %{ocaml_dir}/bin/xenopsd-xc
+%exclude %{ocaml_dir}/doc/xapi-xenopsd-simulator/LICENSE
+%exclude %{ocaml_dir}/doc/xapi-xenopsd-simulator/README.md
+%exclude %{ocaml_dir}/doc/xapi-xenopsd-xc/LICENSE
+%exclude %{ocaml_dir}/doc/xapi-xenopsd-xc/README.md
+%exclude %{ocaml_dir}/lib/xapi-xenopsd-simulator/META
+%exclude %{ocaml_dir}/lib/xapi-xenopsd-simulator/opam
+%exclude %{ocaml_dir}/lib/xapi-xenopsd-xc/META
+%exclude %{ocaml_dir}/lib/xapi-xenopsd-xc/opam
+%exclude %{ocaml_dir}/man/man1/xenopsd-simulator.1
+%exclude %{ocaml_dir}/man/man1/xenopsd-xc.1
+%exclude %{ocaml_dir}/lib/xapi-xenopsd-simulator/dune-package
+%exclude %{ocaml_dir}/lib/xapi-xenopsd-xc/dune-package
+
+
 # ---
 %files devel
 %{ocaml_libdir}/xapi-xenopsd/*
@@ -136,6 +151,18 @@ gzip %{buildroot}%{_mandir}/man1/*.1
 %{_libexecdir}/%{name}/set-domain-uuid
 /opt/xensource/libexec/fence.bin
 
+%pre
+/usr/bin/getent passwd qemu >/dev/null 2>&1 || /usr/sbin/useradd \
+    -M -U -r \
+    -s /sbin/nologin \
+    -d / \
+    qemu >/dev/null 2>&1 || :
+/usr/bin/getent passwd qemu_base >/dev/null 2>&1 || /usr/sbin/useradd \
+    -M -U -r \
+    -s /sbin/nologin \
+    -d / \
+    -u 65535 \
+    qemu_base >/dev/null 2>&1 || :
 
 %post xc
 %systemd_post xenopsd-xc.service
@@ -160,21 +187,176 @@ gzip %{buildroot}%{_mandir}/man1/*.1
 %postun simulator
 %systemd_postun_with_restart xenopsd-simulator.service
 
-%files xenlight
-%{_sbindir}/xenopsd-xenlight
-%{_unitdir}/xenopsd-xenlight.service
-%{_mandir}/man1/xenopsd-xenlight.1.gz
-
-%post xenlight
-%systemd_post xenopsd-xenlight.service
-
-%preun xenlight
-%systemd_preun xenopsd-xenlight.service
-
-%postun xenlight
-%systemd_postun_with_restart xenopsd-xenlight.service
-
 %changelog
+* Fri Mar 29 2019 Christian Lindig <christian.lindig@citrix.com> - 0.101.0-1
+- Fix cross-pool migration for qemu-trad VMs
+- CA-313709: Introduce a Naples version in the VM state
+- CA-313709: Save xen-platform QEMU params in persistent VM state
+- CA-313709: Remember the original QEMU profile
+- CA-313709: Fix migrations from older versions for VMs without device_id
+
+* Fri Mar 29 2019 Christian Lindig <christian.lindig@citrix.com> - 0.100.0-1
+- maintenance: do not apply patch for building
+
+* Mon Feb 25 2019 Christian Lindig <christian.lindig@citrix.com> - 0.99.0-1
+- CA-306416: Get 'num_file_descrs' at runtime instead of hardcode.
+
+* Fri Feb 15 2019 Christian Lindig <christian.lindig@citrix.com> - 0.98.0-1
+- CA-308199: fix VM migration to Xen 4.9+ on AMD machines
+
+* Tue Feb 12 2019 Christian Lindig <christian.lindig@citrix.com> - 0.97.0-1
+- XSI-254 don't create empty /domain/N/device/vif
+
+* Wed Feb 06 2019 Rob Hoes <rob.hoes@citrix.com> - 0.96.0-1
+- CP-29962: Stop passing -vgt_monitor_config_file argument to QEMU
+- CA-309427: interpret the -serial option rather than looking for hvm_serial
+
+* Tue Feb 05 2019 Christian Lindig <christian.lindig@citrix.com> - 0.95.0-1
+- CA-306943: Revert "CA-297602: Always create a physical-device node for HVM CD-ROMs"
+
+* Fri Feb 01 2019 Christian Lindig <christian.lindig@citrix.com> - 0.94.0-1
+- CA-309144: use xen platform rev 1 if no device-id specified
+- CP-30166: Recognise multi-queue blkback kthreads for QoS setting
+- CA-309685 fix fd leak in QMP connection handling
+
+* Tue Jan 29 2019 Christian Lindig <christian.lindig@citrix.com> - 0.93.0-1
+- CP-30508: Expose the host's IOMMU presence
+- Expose host's support for HVM
+
+* Wed Jan 23 2019 Christian Lindig <christian.lindig@citrix.com> - 0.92.0-1
+- Fix DESTDIR handling for Dune 1.6
+
+* Tue Jan 22 2019 Christian Lindig <christian.lindig@citrix.com> - 0.91.0-1
+- CA-307829: XSI-216 add active state to VGPU
+- CA-272180: report suspend ack failure to xapi
+- CA-272180: report suspend timeouts to xapi
+- maintenance: whitespace
+
+* Fri Jan 11 2019 Christian Lindig <christian.lindig@citrix.com> - 0.90.0-1
+- Use xapi-rrd; rrd is being deprecated.
+
+* Wed Jan 09 2019 Christian Lindig <christian.lindig@citrix.com> - 0.89.0-1
+- xenopsd: silence failed-to-read PID messages
+- CP-24362: remove qemu-trad profile, treat it as qemu-upstream-compat
+- CP-25680 CP-25605: do not attempt to start qemu upstream with qemu-trad args
+
+* Mon Jan 07 2019 Christian Lindig <christian.lindig@citrix.com> - 0.88.0-1
+- CA-304519 wait for QMP socket by connecting to it
+
+* Tue Dec 18 2018 Christian Lindig <christian.lindig@citrix.com> - 0.87.0-1
+- CP-28301: set `hvmloader/bios` to "ovmf" for UEFI guests
+- CP-28659: plumb through NVRAM field
+- CP-28662: refactor stop_vgpu
+- CP-28662: use varstored for VM start/stop of UEFI guests
+- CP-28663: build and fix suspend-image-viewer
+- CP-29054: use locked PID files for QEMU
+- CP-29058: use string in Io.read/write to contain 
+  Bytes.unsafe_to_string to io.ml
+- CP-28663: implement VM.suspend/resume for UEFI
+- CP-28662: use record instead of string map for NVRAM
+- CP-29056, CP-28662: use pidfile for varstored, drop --init and use 
+  --nonpersistent
+- CA-295520: do not attempt to suspend varstored in Bios mode
+- Add OVMF debug print arguments (commented) for convinience
+- CA-297602: Always create a physical-device node for HVM CD-ROMs
+- CP-29100: Remove PCI Device and expose IO port for communication 
+  with varstored.
+- CP-29857: Use NVME when platform:device-model=qemu-upstream (#563)
+- CA-301610: fix name for Qemu_upstream_uefi device model
+- CA-301610: move QMP event thread out of qemu_upstream_compat
+- CP-29936: UEFI: block migration when NVME devices are present (#571)
+- CP-29967: varstored deprivileging
+- CP-29827: drop some trad-compat options (#579)
+- CA-302981, CP-30032: Do not try to stop/destroy varstored chroot in 
+  BIOS mode, and sandbox varstore-rm (#584)
+- CA-305090: do not fail on older versions of qemu
+
+* Tue Dec 04 2018 Christian Lindig <christian.lindig@citrix.com> - 0.86.0-1
+- Reference xapi-inventory instead of xcp-inventory; the latter is being deprecated.
+- Reference xapi-idl instead of xcp; the latter is being deprecated.
+
+* Fri Nov 30 2018 Christian Lindig <christian.lindig@citrix.com> - 0.85.0-1
+- CA-303253: XenMotion breaks VIF connectivity when using DVSC
+- CA-303253: Use final-uuid for migration VM as value of xs-vm-uuid in OVS DB
+
+* Tue Nov 27 2018 Christian Lindig <christian.lindig@citrix.com> - 0.84.0-1
+- Update jbuild files to use 'preprocess pps'
+- Port to Dune
+- Revert "CP-28951: Call xapi to send message when receive xen lowmem event"
+- Revert "CP-28951: Add a script to send message to xapi"
+
+* Fri Nov 23 2018 Christian Lindig <christian.lindig@citrix.com> - 0.83.0-2
+- update exclude rules for builds with Dune
+- update VERSION file in source code to reflect version
+
+* Fri Nov 16 2018 Christian Lindig <christian.lindig@citrix.com> - 0.83.0-1
+- CA-254835: make Xen 4.8+ featuresets compatible with Xen 4.7
+- Switch to new ocaml-rpc
+
+* Fri Nov 09 2018 Christian Lindig <christian.lindig@citrix.com> - 0.82.0-1
+- CA-301452: adapt new version scapy igmp changes
+
+* Tue Nov 06 2018 Christian Lindig <christian.lindig@citrix.com> - 0.81.0-1
+- CA-298916 don't wait for domain to disappear
+
+* Wed Oct 31 2018 Christian Lindig <christian.lindig@citrix.com> - 0.80.0-1
+- Update opam files for Opam 2
+
+* Thu Oct 25 2018 Christian Lindig <christian.lindig@citrix.com> - 0.79.0-1
+- CA-297137: Log when finding an undefined domain type
+- CA-254698: Drop call to `xl pci-detach` on PCI.unplug
+
+* Mon Oct 22 2018 Christian Lindig <christian.lindig@citrix.com> - 0.78.0-1
+- CA-297343: Preserve Xenops_interface errors in migration handshake
+
+* Thu Oct 11 2018 Rob Hoes <rob.hoes@citrix.com> - 0.77.0-1
+- CP-28951: Add a script to send message to xapi
+- CP-28951: Call xapi to send message when receive xen lowmem event
+
+* Thu Oct 04 2018 Christian Lindig <christian.lindig@citrix.com> - 0.76.0-1
+- Clear reservation in case of error in with_reservation
+
+* Mon Oct 01 2018 Christian Lindig <christian.lindig@citrix.com> - 0.75.0-1
+- CA-298525 make QMP interaction more robust
+- Use new implementations_of_backend helper from xcp-idl
+
+* Wed Sep 26 2018 Christian Lindig <christian.lindig@citrix.com> - 0.74.0-1
+- CA-297520: Ensure we can always turn exceptions into at least internal errors
+- CA-290696: Block VM migration cancelation just before suspending VM
+
+* Mon Sep 24 2018 Christian Lindig <christian.lindig@citrix.com> - 0.73.0-1
+- Revert "CP-28088: Tell xenguest about GVT-g"
+- CP-27110: Use PPX storage interface
+- CP-27110: Use Opaque SR and VDI types
+
+* Mon Sep 17 2018 Christian Lindig <christian.lindig@citrix.com> - 0.72.0-1
+- Remove xapi-xenopsd-xenlight.opam
+
+* Wed Sep 12 2018 Christian Lindig <christian.lindig@citrix.com> - 0.71.0-1
+- Update opam files
+
+* Tue Sep 11 2018 Christian Lindig <christian.lindig@citrix.com> - 0.70.0-1
+- CA-296924 add "resuming" as a good DEMU state
+
+* Tue Sep 04 2018 Jon Ludlam <jonathan.ludlam@citrix.com> - 0.69.0-2
+- Remove xenlight
+
+* Tue Sep 04 2018 Christian Lindig <christian.lindig@citrix.com> - 0.69.0-1
+- Remove xenlight backend
+- Fixup jbuild files
+- Use the PPX IDL rather than Camlp4
+- Upgrade old-style RPCs to support RPU/SXM
+- jbuild: remove ppx_deriving_rpc from libraries
+- lib/jbuild: link only ppx_sexp_conv.runtime-lib
+
+* Tue Aug 21 2018 Christian Lindig <christian.lindig@citrix.com> - 0.68.0-1
+- Update to newer interface requirements of Task_server
+
+* Mon Aug 13 2018 Christian Lindig <christian.lindig@citrix.com> - 0.67.0-1
+- CA-295092: cancel resume task if process_header raises an exception
+- Pass the maximum number of vcpus into Domain.make
+- Duplicate Xenctrl.domain_create_flag and use shorter names locally
+
 * Wed Jul 25 2018 Christian Lindig <christian.lindig@citrix.com> - 0.66.0-1
 - CA-290688 don't kill emu-manager on cancel, send "abort" cmd
 

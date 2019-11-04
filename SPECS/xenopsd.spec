@@ -1,6 +1,6 @@
 Name:           xenopsd
 Version:        0.101.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Simple VM manager
 License:        LGPL
 URL:            https://github.com/xapi-project/xenopsd
@@ -10,6 +10,7 @@ Source1: SOURCES/xenopsd/xenopsd-xc.service
 Source2: SOURCES/xenopsd/xenopsd-simulator.service
 Source3: SOURCES/xenopsd/xenopsd-sysconfig
 Source4: SOURCES/xenopsd/xenopsd-64-conf
+Patch0: SOURCES/xenopsd/0001-CP-31431-Add-quarantine-dequarantine-for-PCI-devices.patch
 
 
 Provides: gitsha(https://code.citrite.net/rest/archive/latest/projects/XSU/repos/xenopsd/archive?at=v0.101.0&format=tar.gz&prefix=xenopsd-0.101.0#/xenopsd-0.101.0.tar.gz) = 6dd1c2f9ca299f2132682cfa46efd27f0b35302b

@@ -1,16 +1,21 @@
 Name:           xenopsd
 Version:        0.66.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Simple VM manager
 License:        LGPL
 URL:            https://github.com/xapi-project/xenopsd
-Source0:        https://code.citrite.net/rest/archive/latest/projects/XSU/repos/%{name}/archive?at=v%{version}&format=tar.gz&prefix=%{name}-%{version}#/%{name}-%{version}.tar.gz
+
+Source0: https://code.citrite.net/rest/archive/latest/projects/XSU/repos/xenopsd/archive?at=v0.66.0&format=tar.gz&prefix=xenopsd-0.66.0#/xenopsd-0.66.0.tar.gz
+Source1: SOURCES/xenopsd/xenopsd-xc.service
+Source2: SOURCES/xenopsd/xenopsd-xenlight.service
+Source3: SOURCES/xenopsd/xenopsd-simulator.service
+Source4: SOURCES/xenopsd/xenopsd-sysconfig
+Source5: SOURCES/xenopsd/xenopsd-64-conf
+Patch0: SOURCES/xenopsd/0001-CP-31431-Add-quarantine-dequarantine-for-PCI-devices.patch
+
+
 Provides: gitsha(https://code.citrite.net/rest/archive/latest/projects/XSU/repos/xenopsd/archive?at=v0.66.0&format=tar.gz&prefix=xenopsd-0.66.0#/xenopsd-0.66.0.tar.gz) = 949825f219c28b5008ad0e87f4351d8c2d2ae8bd
-Source1:        xenopsd-xc.service
-Source2:        xenopsd-xenlight.service
-Source3:        xenopsd-simulator.service
-Source4:        xenopsd-sysconfig
-Source5:        xenopsd-64-conf
+
 
 BuildRequires:  xs-opam-repo
 BuildRequires:  ocaml-xcp-idl-devel
@@ -30,6 +35,7 @@ Requires:       scapy
 %global __requires_exclude *caml*
 AutoReqProv: no
 
+
 %{?systemd_requires}
 
 %description
@@ -37,6 +43,7 @@ Simple VM manager for the xapi toolstack.
 
 %if 0%{?coverage:1}
 %package        cov
+Provides: gitsha(https://code.citrite.net/rest/archive/latest/projects/XSU/repos/xenopsd/archive?at=v0.66.0&format=tar.gz&prefix=xenopsd-0.66.0#/xenopsd-0.66.0.tar.gz) = 949825f219c28b5008ad0e87f4351d8c2d2ae8bd
 Summary: Xenopsd is built with coverage enabled
 %description    cov
 Xenopsd is built with coverage enabled
@@ -44,6 +51,7 @@ Xenopsd is built with coverage enabled
 %endif
 
 %package        xc
+Provides: gitsha(https://code.citrite.net/rest/archive/latest/projects/XSU/repos/xenopsd/archive?at=v0.66.0&format=tar.gz&prefix=xenopsd-0.66.0#/xenopsd-0.66.0.tar.gz) = 949825f219c28b5008ad0e87f4351d8c2d2ae8bd
 Summary:        Xenopsd using xc
 Requires:       %{name} = %{version}-%{release}
 %if 0%{?coverage:1}
@@ -56,6 +64,7 @@ Requires:       emu-manager
 Simple VM manager for Xen using libxc.
 
 %package        simulator
+Provides: gitsha(https://code.citrite.net/rest/archive/latest/projects/XSU/repos/xenopsd/archive?at=v0.66.0&format=tar.gz&prefix=xenopsd-0.66.0#/xenopsd-0.66.0.tar.gz) = 949825f219c28b5008ad0e87f4351d8c2d2ae8bd
 Summary:        Xenopsd simulator
 Requires:       %{name} = %{version}-%{release}
 %description    simulator
@@ -63,6 +72,7 @@ A synthetic VM manager for testing.
 
 
 %package        xenlight
+Provides: gitsha(https://code.citrite.net/rest/archive/latest/projects/XSU/repos/xenopsd/archive?at=v0.66.0&format=tar.gz&prefix=xenopsd-0.66.0#/xenopsd-0.66.0.tar.gz) = 949825f219c28b5008ad0e87f4351d8c2d2ae8bd
 Summary:        Xenopsd using libxenlight
 Requires:       %{name} = %{version}-%{release}
 
@@ -70,6 +80,7 @@ Requires:       %{name} = %{version}-%{release}
 Simple VM manager for Xen using libxenlight
 
 %package        devel
+Provides: gitsha(https://code.citrite.net/rest/archive/latest/projects/XSU/repos/xenopsd/archive?at=v0.66.0&format=tar.gz&prefix=xenopsd-0.66.0#/xenopsd-0.66.0.tar.gz) = 949825f219c28b5008ad0e87f4351d8c2d2ae8bd
 Summary:        Xenopsd library
 
 %description    devel

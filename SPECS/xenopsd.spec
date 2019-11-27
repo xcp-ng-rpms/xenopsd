@@ -1,6 +1,6 @@
 Name:           xenopsd
 Version:        0.101.0
-Release:        2%{?dist}
+Release:        2.1%{?dist}
 Summary:        Simple VM manager
 License:        LGPL
 URL:            https://github.com/xapi-project/xenopsd
@@ -18,6 +18,7 @@ Provides: gitsha(https://code.citrite.net/rest/archive/latest/projects/XSU/repos
 
 # XCP-ng patches
 Patch1000:      xenopsd-0.66.0-use-xcp-clipboardd.XCP-ng.patch
+Patch1001:      xenopsd-0.101.0-CA-327906-migration-when-xenstore-dir-missing.backport.patch
 
 BuildRequires:  xs-opam-repo
 BuildRequires:  ocaml-xcp-idl-devel
@@ -192,6 +193,10 @@ gzip %{buildroot}%{_mandir}/man1/*.1
 %systemd_postun_with_restart xenopsd-simulator.service
 
 %changelog
+* Wed Nov 27 2019 Samuel Verschelde <stormi-xcp@ylix.fr> - 0.101.0-2.1
+- Backport fix for CA-327906
+- Fixes migration for VMs without network interfaces
+
 * Mon Nov 04 2019 Samuel Verschelde <stormi-xcp@ylix.fr> - 0.101.0-2
 - Security update (XSA-302)
 - Add quarantine/dequarantine for PCI devices

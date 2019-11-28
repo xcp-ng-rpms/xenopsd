@@ -1,6 +1,6 @@
 Name:           xenopsd
 Version:        0.66.0
-Release:        2%{?dist}
+Release:        2.1%{?dist}
 Summary:        Simple VM manager
 License:        LGPL
 URL:            https://github.com/xapi-project/xenopsd
@@ -16,6 +16,8 @@ Patch0: SOURCES/xenopsd/0001-CP-31431-Add-quarantine-dequarantine-for-PCI-device
 
 Provides: gitsha(https://code.citrite.net/rest/archive/latest/projects/XSU/repos/xenopsd/archive?at=v0.66.0&format=tar.gz&prefix=xenopsd-0.66.0#/xenopsd-0.66.0.tar.gz) = 949825f219c28b5008ad0e87f4351d8c2d2ae8bd
 
+# XCP-ng Patches
+Patch1000: xenopsd-0.66.0-CA-327906-migration-when-xenstore-dir-missing.backport.patch
 
 BuildRequires:  xs-opam-repo
 BuildRequires:  ocaml-xcp-idl-devel
@@ -188,6 +190,10 @@ gzip %{buildroot}%{_mandir}/man1/*.1
 %systemd_postun_with_restart xenopsd-xenlight.service
 
 %changelog
+* Thu Nov 28 2019 Samuel Verschelde <stormi-xcp@ylix.fr> - 0.66.0-2.1
+- Backport fix for CA-327906
+- Fixes migration for VMs without network devices
+
 * Wed Jul 25 2018 Christian Lindig <christian.lindig@citrix.com> - 0.66.0-1
 - CA-290688 don't kill emu-manager on cancel, send "abort" cmd
 

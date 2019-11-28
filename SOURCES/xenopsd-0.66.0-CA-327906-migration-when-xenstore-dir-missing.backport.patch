@@ -1,0 +1,64 @@
+From 8c3756b952476ff82f9bcbb9ab11ea027bc5ccbb Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Edwin=20T=C3=B6r=C3=B6k?= <edvin.torok@citrix.com>
+Date: Tue, 1 Oct 2019 14:02:42 +0100
+Subject: [PATCH] CA-327906: don't fail migration if a xenstore directory is
+ missing
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Migration of a VM without VIFs got stuck at:
+```
+Caught Xs_protocol.Enoent("directory"): cleaning up VM stat
+```
+
+Some more debugging showed it failed when trying to move this xenstore
+entry, which was missing:
+```
+/xapi/8e8c58cd-eba4-cde3-e1e5-000000000001
+```
+
+The intention of this code seems to have been to ignore missing entries,
+so do that by ignoring Enoent on the root of a tree.
+Do not ignore Enoent on entries deep in the tree since that would
+indicate a race condition elsewhere.
+
+Signed-off-by: Edwin Török <edvin.torok@citrix.com>
+---
+ lib/xenops_server.ml | 2 ++
+ xc/domain.ml         | 6 ++++++
+ 2 files changed, 8 insertions(+)
+
+diff --git a/lib/xenops_server.ml b/lib/xenops_server.ml
+index b313ca8b2..067a899dd 100644
+--- a/lib/xenops_server.ml
++++ b/lib/xenops_server.ml
+@@ -1866,6 +1866,8 @@ and perform_exn ?subtask ?result (op: operation) (t: Xenops_task.task_handle) :
+           Handshake.send s Handshake.Success;
+           debug "VM.receive_memory: Synchronisation point 4";
+         with e ->
++          Backtrace.is_important e;
++          Debug.log_backtrace e (Backtrace.get e);
+           debug "Caught %s: cleaning up VM state" (Printexc.to_string e);
+           perform_atomics (atomics_of_operation (VM_shutdown (id, None)) @ [
+               VM_remove id
+diff --git a/xc/domain.ml b/xc/domain.ml
+index 65de886d1..edd6ad72f 100644
+--- a/xc/domain.ml
++++ b/xc/domain.ml
+@@ -1573,9 +1573,15 @@ let move_xstree ~xs domid olduuid newuuid =
+     { contents;
+       subtrees = List.map (fun f -> (f, get_tree t (path @ [f]))) subtrees } in
+ 
++  let exists t path =
++    try let (_:string) = t.Xs.read (String.concat "/" path) in true
++    with Xs_protocol.Enoent _ -> false
++  in
++
+   let mv_tree path =
+     let open Xenstore in
+     Xs.transaction xs (fun t ->
++        if exists t path then
+         let tree = get_tree t path in
+         let rec fixup write path (name,node) =
+           let fixed_name = Re.replace_string regexp ~by:newuuid name in

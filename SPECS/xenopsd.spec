@@ -1,24 +1,22 @@
 Name:           xenopsd
-Version:        0.101.0
-Release:        2.1%{?dist}
+Version:        0.134.1
+Release:        1.1%{?dist}
 Summary:        Simple VM manager
 License:        LGPL
 URL:            https://github.com/xapi-project/xenopsd
 
-Source0: https://code.citrite.net/rest/archive/latest/projects/XSU/repos/xenopsd/archive?at=v0.101.0&format=tar.gz&prefix=xenopsd-0.101.0#/xenopsd-0.101.0.tar.gz
+Source0: https://code.citrite.net/rest/archive/latest/projects/XSU/repos/xenopsd/archive?at=v0.134.1&format=tar.gz&prefix=xenopsd-0.134.1#/xenopsd-0.134.1.tar.gz
 Source1: SOURCES/xenopsd/xenopsd-xc.service
 Source2: SOURCES/xenopsd/xenopsd-simulator.service
 Source3: SOURCES/xenopsd/xenopsd-sysconfig
 Source4: SOURCES/xenopsd/xenopsd-64-conf
-Patch0: SOURCES/xenopsd/0001-CP-31431-Add-quarantine-dequarantine-for-PCI-devices.patch
 
 
-Provides: gitsha(https://code.citrite.net/rest/archive/latest/projects/XSU/repos/xenopsd/archive?at=v0.101.0&format=tar.gz&prefix=xenopsd-0.101.0#/xenopsd-0.101.0.tar.gz) = 6dd1c2f9ca299f2132682cfa46efd27f0b35302b
+Provides: gitsha(https://code.citrite.net/rest/archive/latest/projects/XSU/repos/xenopsd/archive?at=v0.134.1&format=tar.gz&prefix=xenopsd-0.134.1#/xenopsd-0.134.1.tar.gz) = 81dc94684b0481f3acc6e2bd021488f12a56e7a5
 
 
 # XCP-ng patches
 Patch1000:      xenopsd-0.66.0-use-xcp-clipboardd.XCP-ng.patch
-Patch1001:      xenopsd-0.101.0-CA-327906-migration-when-xenstore-dir-missing.backport.patch
 
 BuildRequires:  xs-opam-repo
 BuildRequires:  ocaml-xcp-idl-devel
@@ -29,11 +27,11 @@ BuildRequires:  xen-dom0-libs-devel
 BuildRequires:  python-devel
 BuildRequires:  systemd
 Requires:       message-switch
-Requires:       qemu
 Requires:       xenops-cli
 Requires:       xen-dom0-tools
 Requires:       python2-scapy
 
+Requires:       jemalloc
 %global _use_internal_dependency_generator 0
 %global __requires_exclude *caml*
 AutoReqProv: no
@@ -45,7 +43,7 @@ Simple VM manager for the xapi toolstack.
 
 %if 0%{?coverage:1}
 %package        cov
-Provides: gitsha(https://code.citrite.net/rest/archive/latest/projects/XSU/repos/xenopsd/archive?at=v0.101.0&format=tar.gz&prefix=xenopsd-0.101.0#/xenopsd-0.101.0.tar.gz) = 6dd1c2f9ca299f2132682cfa46efd27f0b35302b
+Provides: gitsha(https://code.citrite.net/rest/archive/latest/projects/XSU/repos/xenopsd/archive?at=v0.134.1&format=tar.gz&prefix=xenopsd-0.134.1#/xenopsd-0.134.1.tar.gz) = 81dc94684b0481f3acc6e2bd021488f12a56e7a5
 Summary: Xenopsd is built with coverage enabled
 %description    cov
 Xenopsd is built with coverage enabled
@@ -53,7 +51,7 @@ Xenopsd is built with coverage enabled
 %endif
 
 %package        xc
-Provides: gitsha(https://code.citrite.net/rest/archive/latest/projects/XSU/repos/xenopsd/archive?at=v0.101.0&format=tar.gz&prefix=xenopsd-0.101.0#/xenopsd-0.101.0.tar.gz) = 6dd1c2f9ca299f2132682cfa46efd27f0b35302b
+Provides: gitsha(https://code.citrite.net/rest/archive/latest/projects/XSU/repos/xenopsd/archive?at=v0.134.1&format=tar.gz&prefix=xenopsd-0.134.1#/xenopsd-0.134.1.tar.gz) = 81dc94684b0481f3acc6e2bd021488f12a56e7a5
 Summary:        Xenopsd using xc
 Requires:       %{name} = %{version}-%{release}
 %if 0%{?coverage:1}
@@ -62,25 +60,31 @@ Requires:       %{name}-cov = %{version}-%{release}
 Requires:       forkexecd
 Requires:       xen-libs
 Requires:       emu-manager
+# NVME support requires newer qemu
+# Semantic versioning: describe acceptable range of qemu versions
+# if a new major version of qemu/qemu.pg is released and xenopsd is still
+# compatible then we just have to update this line and bump the minor for xenopsd
+Requires:       qemu >= 2:2.10.2-4.4.0
+Conflicts:      qemu >= 2:2.10.2-5.0.0
 %description    xc
 Simple VM manager for Xen using libxc.
 
 %package        simulator
-Provides: gitsha(https://code.citrite.net/rest/archive/latest/projects/XSU/repos/xenopsd/archive?at=v0.101.0&format=tar.gz&prefix=xenopsd-0.101.0#/xenopsd-0.101.0.tar.gz) = 6dd1c2f9ca299f2132682cfa46efd27f0b35302b
+Provides: gitsha(https://code.citrite.net/rest/archive/latest/projects/XSU/repos/xenopsd/archive?at=v0.134.1&format=tar.gz&prefix=xenopsd-0.134.1#/xenopsd-0.134.1.tar.gz) = 81dc94684b0481f3acc6e2bd021488f12a56e7a5
 Summary:        Xenopsd simulator
 Requires:       %{name} = %{version}-%{release}
 %description    simulator
 A synthetic VM manager for testing.
 
 %package        devel
-Provides: gitsha(https://code.citrite.net/rest/archive/latest/projects/XSU/repos/xenopsd/archive?at=v0.101.0&format=tar.gz&prefix=xenopsd-0.101.0#/xenopsd-0.101.0.tar.gz) = 6dd1c2f9ca299f2132682cfa46efd27f0b35302b
+Provides: gitsha(https://code.citrite.net/rest/archive/latest/projects/XSU/repos/xenopsd/archive?at=v0.134.1&format=tar.gz&prefix=xenopsd-0.134.1#/xenopsd-0.134.1.tar.gz) = 81dc94684b0481f3acc6e2bd021488f12a56e7a5
 Summary:        Xenopsd library
 
 %description    devel
 A library containing a simulator for xenopsd, for use in unit tests
 of interactions with xenopsd
 
-%global ocaml_dir    /usr/lib/opamroot/ocaml-system
+%global ocaml_dir    %{_opamroot}/ocaml-system
 %global ocaml_libdir %{ocaml_dir}/lib
 %global ocaml_docdir %{ocaml_dir}/doc
 
@@ -91,6 +95,9 @@ of interactions with xenopsd
 ./configure --libexecdir %{_libexecdir}/%{name} %{?coverage:--enable-coverage}
 echo "%{version}-%{release}" > VERSION
 make
+
+%check
+make test
 
 %install
 make install DESTDIR=%{buildroot} QEMU_WRAPPER_DIR=%{_libdir}/xen/bin LIBEXECDIR=%{_libexecdir}/%{name} SBINDIR=%{_sbindir} MANDIR=%{_mandir}
@@ -193,18 +200,168 @@ gzip %{buildroot}%{_mandir}/man1/*.1
 %systemd_postun_with_restart xenopsd-simulator.service
 
 %changelog
-* Wed Nov 27 2019 Samuel Verschelde <stormi-xcp@ylix.fr> - 0.101.0-2.1
-- Backport fix for CA-327906
-- Fixes migration for VMs without network interfaces
+* Thu Dec 19 2019 Samuel Verschelde <stormi-xcp@ylix.fr> - 0.134.1-1.1
+- Rebase on CH 8.1
+- Keep xenopsd-0.66.0-use-xcp-clipboardd.XCP-ng.patch for https://github.com/xcp-ng/xcp/issues/166
+- Drop xenopsd-0.101.0-CA-327906-migration-when-xenstore-dir-missing.backport.patch, now included in main source
 
-* Mon Nov 04 2019 Samuel Verschelde <stormi-xcp@ylix.fr> - 0.101.0-2
-- Security update (XSA-302)
-- Add quarantine/dequarantine for PCI devices
+* Thu Nov 28 2019 Ben Anson <ben.anson@citrix.com> - 0.134.1-1
+- CA-330162 Ensure floppy options are passed to qemu
+- maintenance: put Dm media in its own module
 
-* Mon Apr 29 2019 Samuel Verschelde <stormi-xcp@ylix.fr> - 0.101.0-1.1
-- Update for XCP-ng 8.0
-- Re-apply xenopsd-0.66.0-use-xcp-clipboardd.XCP-ng.patch for https://github.com/xcp-ng/xcp/issues/166
-- Drop patch xenopsd-0.66.0-use-xen-platform-rev-1-if-no-device-id-specified.backport.patch, now included in main source
+* Tue Nov 19 2019 Christian Lindig <christian.lindig@citrix.com> - 0.134.0-1
+- Fix CI: add definitions from new xenctrl.h
+- CA-330830: ignore errors during VM.pause on hard shutdown
+
+* Mon Nov 18 2019 Christian Lindig <christian.lindig@citrix.com> - 0.133.0-1
+- CP-32446: New hypercall to get MSR_ARCH_CAPS
+- CP-32446: Allow migrated guests to continue using HLE and RTM
+
+* Fri Nov 01 2019 Edvin Török <edvin.torok@citrix.com> - 0.132.0-1
+- CP-31431: Add quarantine/dequarantine for PCI devices
+
+* Tue Oct 29 2019 Edvin Török <edvin.torok@citrix.com> - 0.131.0-1
+- Backport warning fix from Xen
+- CP-32039: add new libxc bindings for NUMA
+- CP-32039: print backtraces during tests and build_pre
+- CP-32039: plumb has_hard_affinity through
+- CP-32039: NUMA placement using CPU soft affinities
+- CP-32039: add xenopsd.conf flag to enable NUMA placement
+- CP-32039: unit test for NUMA placement
+- CP-32039: address review comments
+
+* Mon Oct 14 2019 Christian Lindig <christian.lindig@citrix.com> - 0.130.0-1
+- Merge REQ-627 SR-IOV support for NVidia GPUs
+
+* Fri Oct 04 2019 Christian Lindig <christian.lindig@citrix.com> - 0.129.0-1
+- CA-327906: don't fail migration if a xenstore directory is missing
+- Delete traces of VSS
+
+* Tue Oct 01 2019 Christian Lindig <christian.lindig@citrix.com> - 0.128.0-1
+- Merge changes for Xen 4.13
+
+* Thu Sep 26 2019 Igor Druzhinin <igor.druzhinin@citrix.com> - 0.127.0-1
+- CA-325848: PVinPVH: set video_mib to 0
+- CA-326317: only allow HAP when the host provides it
+- Resync flags with Xen 4.13
+
+* Tue Sep 24 2019 Christian Lindig <christian.lindig@citrix.com> - 0.126.0-1
+- CA-327280: Revert "Remove workaround for CA-140252"
+
+* Fri Sep 13 2019 Christian Lindig <christian.lindig@citrix.com> - 0.125.0-1
+- Remove workaround for CA-140252
+
+* Mon Sep 09 2019 Christian Lindig <christian.lindig@citrix.com> - 0.124.0-1
+- Travis CI: Test xapi-xenopsd-xc and xapi-xenopsd-simulator too
+- Travis CI: Use common travis env
+- CP-32111: Make shim_mem configurable
+
+* Wed Aug 28 2019 Edvin Török <edvin.torok@citrix.com> - 0.123.0-1
+- xapi-xenopsd*.opam: fix test dependencies
+- Fix dependencies for xapi-xenopsd.opam
+- CA-325129 don't pass "-fork true" to emu manager
+- CA-325129 don't pass -pci_passthrough to emu-manager
+- CA-320079: Add support for NVME namespaces (#653)
+- CA-325129 don't pass -fork true to xenguest
+
+* Fri Aug 23 2019 Edwin Török <edvin.torok@citrix.com> - 0.122.0-2
+- bump packages after xs-opam update
+
+* Thu Aug 15 2019 Christian Lindig <christian.lindig@citrix.com> - 0.122.0-1
+- maintenance: remove bisect_ppx preprocessing
+
+* Mon Aug 12 2019 Christian Lindig <christian.lindig@citrix.com> - 0.121.0-1
+- CA-323893: Catch exceptions in Device.PV_Vnc.is_cmdline_valid
+
+* Wed Aug 07 2019 Christian Lindig <christian.lindig@citrix.com> - 0.120.0-1
+- CP-31117: Remove implementation of obsolete VM options
+- CP-31117: Remove obsolete QEMU stub-domain code
+- Remove `qemu_domid` arg from `Device.Dm.pci_assign_guest`
+
+* Fri Aug 02 2019 Christian Lindig <christian.lindig@citrix.com> - 0.119.0-1
+- CA-233384: move qemu save/restore to tmpfs in /var/run
+- CP-31450: Add domid to Datapath.attach
+- Simplify by removing simplify
+- atomics_of_operation: switch to style based on List.concat
+
+* Mon Jul 29 2019 Christian Lindig <christian.lindig@citrix.com> - 0.118.0-1
+- Move xenstore_watch into xc to make base lib independent of xenstore
+
+* Tue Jul 23 2019 Rob Hoes <rob.hoes@citrix.com> - 0.117.0-1
+- CA-322498: Ensure that QEMU receives the max-memory value used for domain build
+
+* Mon Jul 08 2019 Christian Lindig <christian.lindig@citrix.com> - 0.116.0-1
+- CA-322749: Make toolstack work with old Nvidia host drivers
+- CA-322786 improve ionice handling
+
+* Mon Jul 01 2019 Christian Lindig <christian.lindig@citrix.com> - 0.115.0-1
+- CA-322749: Make toolstack work with old Nvidia host drivers
+- CA-322655: only replace reboots with shutdown when throttling a VM that crashes too often
+
+* Mon Jul 01 2019 Christian Lindig <christian.lindig@citrix.com> - 0.114.0-1
+- Use (||) not "or", avoid warning
+
+* Tue Jun 25 2019 Christian Lindig <christian.lindig@citrix.com> - 0.113.0-1
+- CA-321983: Handle vGPU migration from older releases
+- CA-320189: miss "-vgpu" argument for multiple vGPUs
+
+* Fri Jun 21 2019 Christian Lindig <christian.lindig@citrix.com> - 0.112.0-1
+- CA-315450 pause VM before shutdown
+- Simplify Travis setup
+
+* Tue Jun 18 2019 Christian Lindig <christian.lindig@citrix.com> - 0.111.0-1
+- CP-31545: Support live migration of VM with multiple vGPUs.
+- CA-320361: use device-id if it exists
+
+* Tue Jun 11 2019 Christian Lindig <christian.lindig@citrix.com> - 0.109.0-1
+- CA-320215: use xl pci attach for PV guests
+
+* Wed Jun 05 2019 Christian Lindig <christian.lindig@citrix.com> - 0.108.0-1
+- CP-31060: Support multiple NVIDIA vGPUs in VM startup. (#617)
+- CP-31122: Add uuid into parameters to demu.
+- CP-31321: Support extra_args for vGPU configuration
+- CA-314693: Live migration failure without any vGPU.
+- Support multiple vGPUs in resuming.
+
+* Wed May 29 2019 Christian Lindig <christian.lindig@citrix.com> - 0.107.0-1
+- Revert "CA-306943: Revert "CA-297602: Always create a physical-device 
+  node for HVM CD-ROMs""
+- CP-30037: move start_daemon inside DaemonMgmt
+- PV_Vnc: use DaemonMgmt
+- CP-30037: drop dead argument ?ready_val from init_daemon
+- CP-30037: finished is always true inside wait_path
+- CP-30037: simplify wait_path after removing dead code
+- CP-30037: factor out forkhelpers.waitpid_nohang
+- CP-30037: use systemd to manage varstored
+- CP-30136 Allow specifying of pci slot (#620)
+
+* Tue May 28 2019 Christian Lindig <christian.lindig@citrix.com> - 0.106.0-1
+- CA-318579 write serial device to xenstore for HVM
+
+* Tue May 14 2019 Christian Lindig <christian.lindig@citrix.com> - 0.105.0-1
+- CA-315621 Pass vm_uuid
+- CP-31257: Make the tests work again
+- CP-31257: test: port to alcotest
+- CP-31257: disable 1 unreliable unit test for now
+
+* Tue Apr 16 2019 Christian Lindig <christian.lindig@citrix.com> - 0.104.0-1
+- CA-314170: Revert "Don't wait for hotplug-status to disappear for qdisk"
+- CA-314170: trigger udev events for qemu-dp (qdisk) disks too
+- CA-314170: remove hotplug status when backend is closed on
+             clean shutdown (qdisk)
+- CA-314170: remove hotplug status immediately on hard shutdown (qdisk)
+- CA-314715: Allow backends to generate arguments for hooks
+- CA-314715: Allow to pass extra arguments to hooks
+- CA-314715: Pass to hooks a consistent domid during migrations
+- maintenance: whitespace, consolidate args for vm hooks, i
+  remove unused functions
+
+* Tue Apr 09 2019 Christian Lindig <christian.lindig@citrix.com> - 0.103.0-1
+- CA-314511: Set "type" key for HVM domains that is expected by xl
+
+* Wed Apr 03 2019 Christian Lindig <christian.lindig@citrix.com> - 0.102.0-1
+- CA-314034: Ensure QEMU appends to the logconsole file
+- CA-313265: Don't limit QEMU's file size when using file serial
 
 * Fri Mar 29 2019 Christian Lindig <christian.lindig@citrix.com> - 0.101.0-1
 - Fix cross-pool migration for qemu-trad VMs
@@ -213,7 +370,7 @@ gzip %{buildroot}%{_mandir}/man1/*.1
 - CA-313709: Remember the original QEMU profile
 - CA-313709: Fix migrations from older versions for VMs without device_id
 
-* Fri Mar 29 2019 Christian Lindig <christian.lindig@citrix.com> - 0.100.0-1
+* Thu Mar 28 2019 Christian Lindig <christian.lindig@citrix.com> - 0.100.0-1
 - maintenance: do not apply patch for building
 
 * Mon Feb 25 2019 Christian Lindig <christian.lindig@citrix.com> - 0.99.0-1

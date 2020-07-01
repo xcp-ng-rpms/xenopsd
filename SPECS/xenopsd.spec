@@ -1,18 +1,18 @@
 Name:           xenopsd
-Version:        0.134.1
+Version:        0.150.0
 Release:        1%{?dist}
 Summary:        Simple VM manager
 License:        LGPL
 URL:            https://github.com/xapi-project/xenopsd
 
-Source0: https://code.citrite.net/rest/archive/latest/projects/XSU/repos/xenopsd/archive?at=v0.134.1&format=tar.gz&prefix=xenopsd-0.134.1#/xenopsd-0.134.1.tar.gz
+Source0: https://code.citrite.net/rest/archive/latest/projects/XSU/repos/xenopsd/archive?at=v0.150.0&format=tar.gz&prefix=xenopsd-0.150.0#/xenopsd-0.150.0.tar.gz
 Source1: SOURCES/xenopsd/xenopsd-xc.service
 Source2: SOURCES/xenopsd/xenopsd-simulator.service
 Source3: SOURCES/xenopsd/xenopsd-sysconfig
 Source4: SOURCES/xenopsd/xenopsd-64-conf
 
 
-Provides: gitsha(https://code.citrite.net/rest/archive/latest/projects/XSU/repos/xenopsd/archive?at=v0.134.1&format=tar.gz&prefix=xenopsd-0.134.1#/xenopsd-0.134.1.tar.gz) = 81dc94684b0481f3acc6e2bd021488f12a56e7a5
+Provides: gitsha(https://code.citrite.net/rest/archive/latest/projects/XSU/repos/xenopsd/archive?at=v0.150.0&format=tar.gz&prefix=xenopsd-0.150.0#/xenopsd-0.150.0.tar.gz) = 17f6712fbc456a0e652a2863db41123b09f17da1
 
 
 BuildRequires:  xs-opam-repo
@@ -24,7 +24,6 @@ BuildRequires:  xen-dom0-libs-devel
 BuildRequires:  python-devel
 BuildRequires:  systemd
 Requires:       message-switch
-Requires:       xenops-cli
 Requires:       xen-dom0-tools
 Requires:       python2-scapy
 
@@ -40,7 +39,7 @@ Simple VM manager for the xapi toolstack.
 
 %if 0%{?coverage:1}
 %package        cov
-Provides: gitsha(https://code.citrite.net/rest/archive/latest/projects/XSU/repos/xenopsd/archive?at=v0.134.1&format=tar.gz&prefix=xenopsd-0.134.1#/xenopsd-0.134.1.tar.gz) = 81dc94684b0481f3acc6e2bd021488f12a56e7a5
+Provides: gitsha(https://code.citrite.net/rest/archive/latest/projects/XSU/repos/xenopsd/archive?at=v0.150.0&format=tar.gz&prefix=xenopsd-0.150.0#/xenopsd-0.150.0.tar.gz) = 17f6712fbc456a0e652a2863db41123b09f17da1
 Summary: Xenopsd is built with coverage enabled
 %description    cov
 Xenopsd is built with coverage enabled
@@ -48,7 +47,7 @@ Xenopsd is built with coverage enabled
 %endif
 
 %package        xc
-Provides: gitsha(https://code.citrite.net/rest/archive/latest/projects/XSU/repos/xenopsd/archive?at=v0.134.1&format=tar.gz&prefix=xenopsd-0.134.1#/xenopsd-0.134.1.tar.gz) = 81dc94684b0481f3acc6e2bd021488f12a56e7a5
+Provides: gitsha(https://code.citrite.net/rest/archive/latest/projects/XSU/repos/xenopsd/archive?at=v0.150.0&format=tar.gz&prefix=xenopsd-0.150.0#/xenopsd-0.150.0.tar.gz) = 17f6712fbc456a0e652a2863db41123b09f17da1
 Summary:        Xenopsd using xc
 Requires:       %{name} = %{version}-%{release}
 %if 0%{?coverage:1}
@@ -63,23 +62,34 @@ Requires:       emu-manager
 # compatible then we just have to update this line and bump the minor for xenopsd
 Requires:       qemu >= 2:2.10.2-4.4.0
 Conflicts:      qemu >= 2:2.10.2-5.0.0
+Obsoletes:      ocaml-xenops-tools
+
 %description    xc
 Simple VM manager for Xen using libxc.
 
 %package        simulator
-Provides: gitsha(https://code.citrite.net/rest/archive/latest/projects/XSU/repos/xenopsd/archive?at=v0.134.1&format=tar.gz&prefix=xenopsd-0.134.1#/xenopsd-0.134.1.tar.gz) = 81dc94684b0481f3acc6e2bd021488f12a56e7a5
+Provides: gitsha(https://code.citrite.net/rest/archive/latest/projects/XSU/repos/xenopsd/archive?at=v0.150.0&format=tar.gz&prefix=xenopsd-0.150.0#/xenopsd-0.150.0.tar.gz) = 17f6712fbc456a0e652a2863db41123b09f17da1
 Summary:        Xenopsd simulator
 Requires:       %{name} = %{version}-%{release}
 %description    simulator
 A synthetic VM manager for testing.
 
 %package        devel
-Provides: gitsha(https://code.citrite.net/rest/archive/latest/projects/XSU/repos/xenopsd/archive?at=v0.134.1&format=tar.gz&prefix=xenopsd-0.134.1#/xenopsd-0.134.1.tar.gz) = 81dc94684b0481f3acc6e2bd021488f12a56e7a5
+Provides: gitsha(https://code.citrite.net/rest/archive/latest/projects/XSU/repos/xenopsd/archive?at=v0.150.0&format=tar.gz&prefix=xenopsd-0.150.0#/xenopsd-0.150.0.tar.gz) = 17f6712fbc456a0e652a2863db41123b09f17da1
 Summary:        Xenopsd library
 
 %description    devel
 A library containing a simulator for xenopsd, for use in unit tests
 of interactions with xenopsd
+
+%package        cli
+Provides: gitsha(https://code.citrite.net/rest/archive/latest/projects/XSU/repos/xenopsd/archive?at=v0.150.0&format=tar.gz&prefix=xenopsd-0.150.0#/xenopsd-0.150.0.tar.gz) = 17f6712fbc456a0e652a2863db41123b09f17da1
+Summary:        CLI for xenopsd, the xapi toolstack domain manager
+Requires:       %{name} = %{version}-%{release}
+Obsoletes:      xenops-cli
+
+%description    cli
+Command-line interface for xenopsd, the xapi toolstack domain manager.
 
 %global ocaml_dir    %{_opamroot}/ocaml-system
 %global ocaml_libdir %{ocaml_dir}/lib
@@ -97,10 +107,7 @@ make
 make test
 
 %install
-make install DESTDIR=%{buildroot} QEMU_WRAPPER_DIR=%{_libdir}/xen/bin LIBEXECDIR=%{_libexecdir}/%{name} SBINDIR=%{_sbindir} MANDIR=%{_mandir}
-
-# should really be in Makefile
-gzip %{buildroot}%{_mandir}/man1/*.1
+make install DESTDIR=%{buildroot} QEMU_WRAPPER_DIR=%{_libdir}/xen/bin LIBEXECDIR=%{_libexecdir}/%{name} SBINDIR=%{_sbindir} MANDIR=%{_mandir} BINDIR=%{_bindir}
 
 %{__install} -D -m 0644 %{SOURCE1} %{buildroot}%{_unitdir}/xenopsd-xc.service
 %{__install} -D -m 0644 %{SOURCE2} %{buildroot}%{_unitdir}/xenopsd-simulator.service
@@ -128,24 +135,7 @@ gzip %{buildroot}%{_mandir}/man1/*.1
 %config(noreplace) %{_sysconfdir}/sysconfig/xenopsd
 %config(noreplace) %{_sysconfdir}/xenopsd.conf
 
-%exclude %{ocaml_dir}/bin/dbgring
-%exclude %{ocaml_dir}/bin/fence.bin
-%exclude %{ocaml_dir}/bin/set-domain-uuid
-%exclude %{ocaml_dir}/bin/xenopsd-simulator
-%exclude %{ocaml_dir}/bin/xenopsd-xc
-%exclude %{ocaml_dir}/doc/xapi-xenopsd-simulator/LICENSE
-%exclude %{ocaml_dir}/doc/xapi-xenopsd-simulator/README.md
-%exclude %{ocaml_dir}/doc/xapi-xenopsd-xc/LICENSE
-%exclude %{ocaml_dir}/doc/xapi-xenopsd-xc/README.md
-%exclude %{ocaml_dir}/lib/xapi-xenopsd-simulator/META
-%exclude %{ocaml_dir}/lib/xapi-xenopsd-simulator/opam
-%exclude %{ocaml_dir}/lib/xapi-xenopsd-xc/META
-%exclude %{ocaml_dir}/lib/xapi-xenopsd-xc/opam
-%exclude %{ocaml_dir}/man/man1/xenopsd-simulator.1
-%exclude %{ocaml_dir}/man/man1/xenopsd-xc.1
-%exclude %{ocaml_dir}/lib/xapi-xenopsd-simulator/dune-package
-%exclude %{ocaml_dir}/lib/xapi-xenopsd-xc/dune-package
-
+%exclude %{ocaml_dir}
 
 # ---
 %files devel
@@ -159,6 +149,11 @@ gzip %{buildroot}%{_mandir}/man1/*.1
 %{_mandir}/man1/xenopsd-xc.1.gz
 %{_libexecdir}/%{name}/set-domain-uuid
 /opt/xensource/libexec/fence.bin
+%{_bindir}/list_domains
+
+%files cli
+%{_sbindir}/xenops-cli
+%{_mandir}/man1/xenops-cli.1.gz
 
 %pre
 /usr/bin/getent passwd qemu >/dev/null 2>&1 || /usr/sbin/useradd \
@@ -197,9 +192,73 @@ gzip %{buildroot}%{_mandir}/man1/*.1
 %systemd_postun_with_restart xenopsd-simulator.service
 
 %changelog
-* Thu Nov 28 2019 Ben Anson <ben.anson@citrix.com> - 0.134.1-1
+* Tue May 19 2020 Christian Lindig <christian.lindig@citrix.com> - 0.150.0-1
+- maintenance: prepare for ocamlformat
+- maintenance: format code with ocamlformat
+- maintenance: format comments using ocamlformat
+
+* Mon May 18 2020 Christian Lindig <christian.lindig@citrix.com> - 0.149.0-1
+- CP-33793 make QMP monitoring more robust
+
+* Wed Apr 29 2020 Christian Lindig <christian.lindig@citrix.com> - 0.148.0-1
+- CA-335964: store the original vm uuid when starting migration
+- CA-335964: refactor rename function
+- maintenance: use travis validator suggestions
+
+* Mon Apr 27 2020 Christian Lindig <christian.lindig@citrix.com> - 0.147.0-1
+- CP-32863: Run hotplug scripts from xenopsd for storage driver domains
+- CP-32863: fix hotplug script for storage driver domains
+- CP-32863: make removal idempotent
+- CP-32863: do not get stuck waiting for state to reach closed when key
+	disappears
+- CP-32863: Do not wait for hotplug scripts in Dom0 when plugging in
+	storage driver domains
+
+* Mon Mar 23 2020 Christian Lindig <christian.lindig@citrix.com> - 0.146.0-1
+- CP-33121: replace Opt with Option
+- CP-33121: Do not use Stdext directly
+- maintenance: whitespace
+- maintenace: remove warnings
+
+* Mon Mar 02 2020 Christian Lindig <christian.lindig@citrix.com> - 0.145.0-1
+- Use get_cpu_featureset instead of get_featureset
+
+* Mon Feb 17 2020 Christian Lindig <christian.lindig@citrix.com> - 0.144.0-1
+- CA-335206 catch exception from Rpcmarshal.unmarshal
+
+* Fri Feb 07 2020 Christian Lindig <christian.lindig@citrix.com> - 0.143.0-1
+- REQ-627 CA-334557 dequarantine VGPU PCIs
+- maintenance: use stdext whenever possible
+- maintenance: remove all usages of Xstringext
+- maintenance: remove ocaml warnings
+- opam: keep up-to-date with xs-opam
+
+* Tue Jan 28 2020 Christian Lindig <christian.lindig@citrix.com> - 0.142.0-1
+- REQ-627 CA-333495 Introduce PCI dequarantine
+
+* Wed Jan 22 2020 Christian Lindig <christian.lindig@citrix.com> - 0.141.0-1
+- CA-332811: Manage libxl type record properly
+
+* Mon Jan 06 2020 Christian Lindig <christian.lindig@citrix.com> - 0.140.0-1
+- CP-32429: Modernize python2 code (automated)
+- CA-328130 use usb speed to determine bus
+
+* Tue Dec 17 2019 Christian Lindig <christian.lindig@citrix.com> - 0.139.0-1
+- Use Stdlib.compare instead of Pervasives.compare
+
+* Wed Dec 11 2019 Christian Lindig <christian.lindig@citrix.com> - 0.138.0-1
+- import xapi-xenops
+
+* Tue Dec 03 2019 Christian Lindig <christian.lindig@citrix.com> - 0.137.0-1
+- Import xenops-cli and xenops into this repository
+- CA-325940 deactivate NVidia PCI SRIOV b/f using pass-through
+
+* Fri Nov 29 2019 Christian Lindig <christian.lindig@citrix.com> - 0.136.0-1
 - CA-330162 Ensure floppy options are passed to qemu
 - maintenance: put Dm media in its own module
+
+* Mon Nov 25 2019 Christian Lindig <christian.lindig@citrix.com> - 0.135.0-1
+- CA-328093: Correctly report PV-driver status for UEFI-booted VMs
 
 * Tue Nov 19 2019 Christian Lindig <christian.lindig@citrix.com> - 0.134.0-1
 - Fix CI: add definitions from new xenctrl.h

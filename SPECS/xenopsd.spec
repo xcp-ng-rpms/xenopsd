@@ -1,6 +1,6 @@
 Name:           xenopsd
 Version:        0.150.0
-Release:        1.1%{?dist}
+Release:        1.2%{?dist}
 Summary:        Simple VM manager
 License:        LGPL
 URL:            https://github.com/xapi-project/xenopsd
@@ -195,7 +195,10 @@ make install DESTDIR=%{buildroot} QEMU_WRAPPER_DIR=%{_libdir}/xen/bin LIBEXECDIR
 %systemd_postun_with_restart xenopsd-simulator.service
 
 %changelog
-* Wed Jul 01 2020 Samuel Verschelde <stormi-xcp@ylix.fr> - 0.149.0-1.1
+* Thu Nov 05 2020 Samuel Verschelde <stormi-xcp@ylix.fr> - 0.150.0-1.2
+- Rebuild for xs-opam-src 6.35.1 from XS82E002
+
+* Wed Jul 01 2020 Samuel Verschelde <stormi-xcp@ylix.fr> - 0.150.0-1.1
 - Rebase on CH 8.1
 - Keep xenopsd-0.66.0-use-xcp-clipboardd.XCP-ng.patch for https://github.com/xcp-ng/xcp/issues/166
 

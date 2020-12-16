@@ -1,18 +1,18 @@
 Name:           xenopsd
-Version:        0.134.1
+Version:        0.134.4
 Release:        1%{?dist}
 Summary:        Simple VM manager
 License:        LGPL
 URL:            https://github.com/xapi-project/xenopsd
 
-Source0: https://code.citrite.net/rest/archive/latest/projects/XSU/repos/xenopsd/archive?at=v0.134.1&format=tar.gz&prefix=xenopsd-0.134.1#/xenopsd-0.134.1.tar.gz
+Source0: https://code.citrite.net/rest/archive/latest/projects/xs/repos/xenopsd/archive?at=v0.134.4&format=tar.gz&prefix=xenopsd-0.134.4#/xenopsd-0.134.4.tar.gz
 Source1: SOURCES/xenopsd/xenopsd-xc.service
 Source2: SOURCES/xenopsd/xenopsd-simulator.service
 Source3: SOURCES/xenopsd/xenopsd-sysconfig
 Source4: SOURCES/xenopsd/xenopsd-64-conf
 
 
-Provides: gitsha(https://code.citrite.net/rest/archive/latest/projects/XSU/repos/xenopsd/archive?at=v0.134.1&format=tar.gz&prefix=xenopsd-0.134.1#/xenopsd-0.134.1.tar.gz) = 81dc94684b0481f3acc6e2bd021488f12a56e7a5
+Provides: gitsha(https://code.citrite.net/rest/archive/latest/projects/xs/repos/xenopsd/archive?at=v0.134.4&format=tar.gz&prefix=xenopsd-0.134.4#/xenopsd-0.134.4.tar.gz) = 56c5a486f057b571d3105b06a0c8be93e2382b76
 
 
 BuildRequires:  xs-opam-repo
@@ -40,7 +40,7 @@ Simple VM manager for the xapi toolstack.
 
 %if 0%{?coverage:1}
 %package        cov
-Provides: gitsha(https://code.citrite.net/rest/archive/latest/projects/XSU/repos/xenopsd/archive?at=v0.134.1&format=tar.gz&prefix=xenopsd-0.134.1#/xenopsd-0.134.1.tar.gz) = 81dc94684b0481f3acc6e2bd021488f12a56e7a5
+Provides: gitsha(https://code.citrite.net/rest/archive/latest/projects/xs/repos/xenopsd/archive?at=v0.134.4&format=tar.gz&prefix=xenopsd-0.134.4#/xenopsd-0.134.4.tar.gz) = 56c5a486f057b571d3105b06a0c8be93e2382b76
 Summary: Xenopsd is built with coverage enabled
 %description    cov
 Xenopsd is built with coverage enabled
@@ -48,7 +48,7 @@ Xenopsd is built with coverage enabled
 %endif
 
 %package        xc
-Provides: gitsha(https://code.citrite.net/rest/archive/latest/projects/XSU/repos/xenopsd/archive?at=v0.134.1&format=tar.gz&prefix=xenopsd-0.134.1#/xenopsd-0.134.1.tar.gz) = 81dc94684b0481f3acc6e2bd021488f12a56e7a5
+Provides: gitsha(https://code.citrite.net/rest/archive/latest/projects/xs/repos/xenopsd/archive?at=v0.134.4&format=tar.gz&prefix=xenopsd-0.134.4#/xenopsd-0.134.4.tar.gz) = 56c5a486f057b571d3105b06a0c8be93e2382b76
 Summary:        Xenopsd using xc
 Requires:       %{name} = %{version}-%{release}
 %if 0%{?coverage:1}
@@ -67,14 +67,14 @@ Conflicts:      qemu >= 2:2.10.2-5.0.0
 Simple VM manager for Xen using libxc.
 
 %package        simulator
-Provides: gitsha(https://code.citrite.net/rest/archive/latest/projects/XSU/repos/xenopsd/archive?at=v0.134.1&format=tar.gz&prefix=xenopsd-0.134.1#/xenopsd-0.134.1.tar.gz) = 81dc94684b0481f3acc6e2bd021488f12a56e7a5
+Provides: gitsha(https://code.citrite.net/rest/archive/latest/projects/xs/repos/xenopsd/archive?at=v0.134.4&format=tar.gz&prefix=xenopsd-0.134.4#/xenopsd-0.134.4.tar.gz) = 56c5a486f057b571d3105b06a0c8be93e2382b76
 Summary:        Xenopsd simulator
 Requires:       %{name} = %{version}-%{release}
 %description    simulator
 A synthetic VM manager for testing.
 
 %package        devel
-Provides: gitsha(https://code.citrite.net/rest/archive/latest/projects/XSU/repos/xenopsd/archive?at=v0.134.1&format=tar.gz&prefix=xenopsd-0.134.1#/xenopsd-0.134.1.tar.gz) = 81dc94684b0481f3acc6e2bd021488f12a56e7a5
+Provides: gitsha(https://code.citrite.net/rest/archive/latest/projects/xs/repos/xenopsd/archive?at=v0.134.4&format=tar.gz&prefix=xenopsd-0.134.4#/xenopsd-0.134.4.tar.gz) = 56c5a486f057b571d3105b06a0c8be93e2382b76
 Summary:        Xenopsd library
 
 %description    devel
@@ -197,6 +197,18 @@ gzip %{buildroot}%{_mandir}/man1/*.1
 %systemd_postun_with_restart xenopsd-simulator.service
 
 %changelog
+* Tue Nov 24 2020 Ben Anson <ben.anson@citrix.com> - 0.134.4-1
+-  CA-344431, CA-348217: exclude attr/os/hotfixes from ls_lR
+-  CA-344431: read important xenstore entries first
+
+* Thu Nov 19 2020 Ben Anson <ben.anson@citrix.com> - 0.134.2-1
+-  CA-344431: ls_lR: factor out dir concatenation
+-  CA-344431: ls_lR: refactor, use fold
+-  CA-344431: ls_lR: separate recursion into separate
+-  CA-344431: ls_lR: add quota
+-  CA-344431: ls_lR: limit depth
+-  CA-344431, CA-348217: exclude attr/os/hotfixes from ls_lR
+
 * Thu Nov 28 2019 Ben Anson <ben.anson@citrix.com> - 0.134.1-1
 - CA-330162 Ensure floppy options are passed to qemu
 - maintenance: put Dm media in its own module

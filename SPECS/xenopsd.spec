@@ -1,6 +1,6 @@
 Name:           xenopsd
 Version:        0.150.9
-Release:        1.1%{?dist}
+Release:        1.1.0.ipv6.1%{?dist}
 Summary:        Simple VM manager
 License:        LGPL
 URL:            https://github.com/xapi-project/xenopsd
@@ -195,6 +195,9 @@ make install DESTDIR=%{buildroot} QEMU_WRAPPER_DIR=%{_libdir}/xen/bin LIBEXECDIR
 %systemd_postun_with_restart xenopsd-simulator.service
 
 %changelog
+* Thu Feb 17 2022 Benjamin Reis <benjamin.reis@vates.fr> - 0.150.9-1.1.0.ipv6.1
+- Rebuild for IPv6: dependent of forkexecd
+
 * Mon Dec 20 2021 Samuel Verschelde <stormi-xcp@ylix.fr> - 0.150.9-1.1
 - Sync with CH 8.2.1
 - *** Upstream changelog ***
@@ -447,7 +450,7 @@ make install DESTDIR=%{buildroot} QEMU_WRAPPER_DIR=%{_libdir}/xen/bin LIBEXECDIR
 - Support multiple vGPUs in resuming.
 
 * Wed May 29 2019 Christian Lindig <christian.lindig@citrix.com> - 0.107.0-1
-- Revert "CA-306943: Revert "CA-297602: Always create a physical-device 
+- Revert "CA-306943: Revert "CA-297602: Always create a physical-device
   node for HVM CD-ROMs""
 - CP-30037: move start_daemon inside DaemonMgmt
 - PV_Vnc: use DaemonMgmt
@@ -548,16 +551,16 @@ make install DESTDIR=%{buildroot} QEMU_WRAPPER_DIR=%{_libdir}/xen/bin LIBEXECDIR
 - CP-28662: use varstored for VM start/stop of UEFI guests
 - CP-28663: build and fix suspend-image-viewer
 - CP-29054: use locked PID files for QEMU
-- CP-29058: use string in Io.read/write to contain 
+- CP-29058: use string in Io.read/write to contain
   Bytes.unsafe_to_string to io.ml
 - CP-28663: implement VM.suspend/resume for UEFI
 - CP-28662: use record instead of string map for NVRAM
-- CP-29056, CP-28662: use pidfile for varstored, drop --init and use 
+- CP-29056, CP-28662: use pidfile for varstored, drop --init and use
   --nonpersistent
 - CA-295520: do not attempt to suspend varstored in Bios mode
 - Add OVMF debug print arguments (commented) for convinience
 - CA-297602: Always create a physical-device node for HVM CD-ROMs
-- CP-29100: Remove PCI Device and expose IO port for communication 
+- CP-29100: Remove PCI Device and expose IO port for communication
   with varstored.
 - CP-29857: Use NVME when platform:device-model=qemu-upstream (#563)
 - CA-301610: fix name for Qemu_upstream_uefi device model
@@ -565,7 +568,7 @@ make install DESTDIR=%{buildroot} QEMU_WRAPPER_DIR=%{_libdir}/xen/bin LIBEXECDIR
 - CP-29936: UEFI: block migration when NVME devices are present (#571)
 - CP-29967: varstored deprivileging
 - CP-29827: drop some trad-compat options (#579)
-- CA-302981, CP-30032: Do not try to stop/destroy varstored chroot in 
+- CA-302981, CP-30032: Do not try to stop/destroy varstored chroot in
   BIOS mode, and sandbox varstore-rm (#584)
 - CA-305090: do not fail on older versions of qemu
 

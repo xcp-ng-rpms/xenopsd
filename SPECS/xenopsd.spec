@@ -1,6 +1,6 @@
 Name:           xenopsd
 Version:        0.150.2
-Release:        1.1.0.ipv6.1%{?dist}
+Release:        1.1.0.ipv6.2%{?dist}
 Summary:        Simple VM manager
 License:        LGPL
 URL:            https://github.com/xapi-project/xenopsd
@@ -195,6 +195,9 @@ make install DESTDIR=%{buildroot} QEMU_WRAPPER_DIR=%{_libdir}/xen/bin LIBEXECDIR
 %systemd_postun_with_restart xenopsd-simulator.service
 
 %changelog
+* Wed May 05 2021 Benjamin Reis <benjamin.reis@vates.fr> - 0.150.2-1.1.0.ipv6.2
+- Rebuild for IPv6: dependent of forkexecd
+
 * Fri Jan 29 2021 Benjamin Reis <benjamin.reis@vates.fr> - 0.150.2-1.1.0.ipv6.1
 - Rebuild for IPv6: dependent of forkexecd
 

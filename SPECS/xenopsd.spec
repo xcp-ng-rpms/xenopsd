@@ -1,18 +1,18 @@
 Name:           xenopsd
-Version:        0.150.2
+Version:        0.150.5
 Release:        1%{?dist}
 Summary:        Simple VM manager
 License:        LGPL
 URL:            https://github.com/xapi-project/xenopsd
 
-Source0: https://code.citrite.net/rest/archive/latest/projects/xs/repos/xenopsd/archive?at=v0.150.2&format=tar.gz&prefix=xenopsd-0.150.2#/xenopsd-0.150.2.tar.gz
+Source0: https://code.citrite.net/rest/archive/latest/projects/XSU/repos/xenopsd/archive?at=v0.150.5&format=tar.gz&prefix=xenopsd-0.150.5#/xenopsd-0.150.5.tar.gz
 Source1: SOURCES/xenopsd/xenopsd-xc.service
 Source2: SOURCES/xenopsd/xenopsd-simulator.service
 Source3: SOURCES/xenopsd/xenopsd-sysconfig
 Source4: SOURCES/xenopsd/xenopsd-64-conf
 
 
-Provides: gitsha(https://code.citrite.net/rest/archive/latest/projects/xs/repos/xenopsd/archive?at=v0.150.2&format=tar.gz&prefix=xenopsd-0.150.2#/xenopsd-0.150.2.tar.gz) = 7c9e05a615665d52ab8e1e0f06208643f3a84460
+Provides: gitsha(https://code.citrite.net/rest/archive/latest/projects/XSU/repos/xenopsd/archive?at=v0.150.5&format=tar.gz&prefix=xenopsd-0.150.5#/xenopsd-0.150.5.tar.gz) = fe8ed11d0a983f9a88a7de7274fc819ece3199aa
 
 
 BuildRequires:  xs-opam-repo
@@ -39,7 +39,7 @@ Simple VM manager for the xapi toolstack.
 
 %if 0%{?coverage:1}
 %package        cov
-Provides: gitsha(https://code.citrite.net/rest/archive/latest/projects/xs/repos/xenopsd/archive?at=v0.150.2&format=tar.gz&prefix=xenopsd-0.150.2#/xenopsd-0.150.2.tar.gz) = 7c9e05a615665d52ab8e1e0f06208643f3a84460
+Provides: gitsha(https://code.citrite.net/rest/archive/latest/projects/XSU/repos/xenopsd/archive?at=v0.150.5&format=tar.gz&prefix=xenopsd-0.150.5#/xenopsd-0.150.5.tar.gz) = fe8ed11d0a983f9a88a7de7274fc819ece3199aa
 Summary: Xenopsd is built with coverage enabled
 %description    cov
 Xenopsd is built with coverage enabled
@@ -47,7 +47,7 @@ Xenopsd is built with coverage enabled
 %endif
 
 %package        xc
-Provides: gitsha(https://code.citrite.net/rest/archive/latest/projects/xs/repos/xenopsd/archive?at=v0.150.2&format=tar.gz&prefix=xenopsd-0.150.2#/xenopsd-0.150.2.tar.gz) = 7c9e05a615665d52ab8e1e0f06208643f3a84460
+Provides: gitsha(https://code.citrite.net/rest/archive/latest/projects/XSU/repos/xenopsd/archive?at=v0.150.5&format=tar.gz&prefix=xenopsd-0.150.5#/xenopsd-0.150.5.tar.gz) = fe8ed11d0a983f9a88a7de7274fc819ece3199aa
 Summary:        Xenopsd using xc
 Requires:       %{name} = %{version}-%{release}
 %if 0%{?coverage:1}
@@ -68,14 +68,14 @@ Obsoletes:      ocaml-xenops-tools
 Simple VM manager for Xen using libxc.
 
 %package        simulator
-Provides: gitsha(https://code.citrite.net/rest/archive/latest/projects/xs/repos/xenopsd/archive?at=v0.150.2&format=tar.gz&prefix=xenopsd-0.150.2#/xenopsd-0.150.2.tar.gz) = 7c9e05a615665d52ab8e1e0f06208643f3a84460
+Provides: gitsha(https://code.citrite.net/rest/archive/latest/projects/XSU/repos/xenopsd/archive?at=v0.150.5&format=tar.gz&prefix=xenopsd-0.150.5#/xenopsd-0.150.5.tar.gz) = fe8ed11d0a983f9a88a7de7274fc819ece3199aa
 Summary:        Xenopsd simulator
 Requires:       %{name} = %{version}-%{release}
 %description    simulator
 A synthetic VM manager for testing.
 
 %package        devel
-Provides: gitsha(https://code.citrite.net/rest/archive/latest/projects/xs/repos/xenopsd/archive?at=v0.150.2&format=tar.gz&prefix=xenopsd-0.150.2#/xenopsd-0.150.2.tar.gz) = 7c9e05a615665d52ab8e1e0f06208643f3a84460
+Provides: gitsha(https://code.citrite.net/rest/archive/latest/projects/XSU/repos/xenopsd/archive?at=v0.150.5&format=tar.gz&prefix=xenopsd-0.150.5#/xenopsd-0.150.5.tar.gz) = fe8ed11d0a983f9a88a7de7274fc819ece3199aa
 Summary:        Xenopsd library
 
 %description    devel
@@ -83,7 +83,7 @@ A library containing a simulator for xenopsd, for use in unit tests
 of interactions with xenopsd
 
 %package        cli
-Provides: gitsha(https://code.citrite.net/rest/archive/latest/projects/xs/repos/xenopsd/archive?at=v0.150.2&format=tar.gz&prefix=xenopsd-0.150.2#/xenopsd-0.150.2.tar.gz) = 7c9e05a615665d52ab8e1e0f06208643f3a84460
+Provides: gitsha(https://code.citrite.net/rest/archive/latest/projects/XSU/repos/xenopsd/archive?at=v0.150.5&format=tar.gz&prefix=xenopsd-0.150.5#/xenopsd-0.150.5.tar.gz) = fe8ed11d0a983f9a88a7de7274fc819ece3199aa
 Summary:        CLI for xenopsd, the xapi toolstack domain manager
 Requires:       %{name} = %{version}-%{release}
 Obsoletes:      xenops-cli
@@ -192,6 +192,26 @@ make install DESTDIR=%{buildroot} QEMU_WRAPPER_DIR=%{_libdir}/xen/bin LIBEXECDIR
 %systemd_postun_with_restart xenopsd-simulator.service
 
 %changelog
+* Mon Feb 22 2021 Ben Anson <ben.anson@citrix.com> - 0.150.5-1
+- UPD-678 CA-351823 Revert "Avoid sexp_option deprecation warning"
+- UPD-678 CA-351823 unit test for [@sexp.option] fix
+
+* Wed Feb 17 2021 Ben Anson <ben.anson@citrix.com> - 0.150.4-1
+- CP-28375: Implement soft reset handler for guest kdump support
+- CA-342935: Disengage guest balloon driver and reset PV features on soft reset
+
+* Thu Feb 11 2021 Ben Anson <ben.anson@citrix.com> - 0.150.3-1
+- CA-341518: send error handshake during migration
+- CA-341518: add tmp ids to vm_migrate_op
+- CA-341518: call VM_check_state on tmp VM on a failed VM_migrate
+- Avoid sexp_option deprecation warning
+- CA-332779: verify power state for start/reboot/resume
+- CA-332779: Fix resume unit test due to power-state checks
+- maintenance: reformat
+- CA-347560: move metadata import and add/remove functions outside VM module
+- CA-347560: Introduce VM_import_metadata atomic and queue the op when needed
+- CA-347560: Introduce VM.import_metadata_async
+
 * Tue Nov 24 2020 Ben Anson <ben.anson@citrix.com> - 0.150.2-1
 -  CA-344431: read important xenstore entries first
 -  CA-344431: refactor attr/os/hotfixes exclusion

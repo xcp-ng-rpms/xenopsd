@@ -1,0 +1,190 @@
+From e423c460a29a0dacdbd3a061a10ba98f5e7e2492 Mon Sep 17 00:00:00 2001
+From: Ronan Abhamon <ronan.abhamon@vates.fr>
+Date: Mon, 2 Aug 2021 15:26:35 +0200
+Subject: [PATCH] support 9pfs VDIs
+
+---
+ scripts/block                    | 16 ++++++++++------
+ scripts/make-custom-xenopsd.conf |  2 +-
+ scripts/xen-backend.rules.in     |  2 +-
+ xc/device.ml                     | 31 ++++++++++++++++++++++++-------
+ xc/device_common.ml              |  4 +++-
+ xc/domain.ml                     |  2 +-
+ xc/xenops_server_xen.ml          |  4 +++-
+ 7 files changed, 43 insertions(+), 18 deletions(-)
+
+diff --git a/scripts/block b/scripts/block
+index ac77cf3a..560f6efa 100755
+--- a/scripts/block
++++ b/scripts/block
+@@ -22,12 +22,16 @@ add)
+ 		params=$(readlink -f $params || echo $params)
+ 		frontend="/local/domain/${DOMID}/device/${TYPE}/${DEVID}"
+ 		syslog "${XENBUS_PATH}: add params=\"${params}\""
+-		physical_device=$(/usr/bin/stat --format="%t:%T" "${params}")
+-		syslog "${XENBUS_PATH}: physical-device=${physical_device}"
+-		xenstore-exists "${XENBUS_PATH}/physical-device"
+-		if [ $? -eq 1 ]; then
+-			syslog "${XENBUS_PATH}: writing physical-device=${physical_device}"
+-			xenstore-write "${XENBUS_PATH}/physical-device" "${physical_device}"
++
++		# Write physical-device field only for real block devices.
++		if [ "$TYPE" != "9pfs" ]; then
++			physical_device=$(/usr/bin/stat --format="%t:%T" "${params}")
++			syslog "${XENBUS_PATH}: physical-device=${physical_device}"
++			xenstore-exists "${XENBUS_PATH}/physical-device"
++			if [ $? -eq 1 ]; then
++				syslog "${XENBUS_PATH}: writing physical-device=${physical_device}"
++				xenstore-write "${XENBUS_PATH}/physical-device" "${physical_device}"
++			fi
+ 		fi
+ 	fi
+ 	xenstore-write "${HOTPLUG}/hotplug" "online"
+diff --git a/scripts/make-custom-xenopsd.conf b/scripts/make-custom-xenopsd.conf
+index 7cbb0f76..828f8458 100755
+--- a/scripts/make-custom-xenopsd.conf
++++ b/scripts/make-custom-xenopsd.conf
+@@ -33,7 +33,7 @@ pygrub=pygrub
+ qemu-system-i386=qemu-system-i386
+ vncterm=${LIBEXECDIR}/vncterm-wrapper
+ hvmloader=hvmloader
+-supported-vbd-backend-kinds=vbd,qdisk
++supported-vbd-backend-kinds=vbd,qdisk,9pfs
+ xenguest=${LIBEXECDIR}/xenguest
+ 
+ network-conf=${ETCDIR}/xapi/network.conf
+diff --git a/scripts/xen-backend.rules.in b/scripts/xen-backend.rules.in
+index 2f523087..fde9db50 100644
+--- a/scripts/xen-backend.rules.in
++++ b/scripts/xen-backend.rules.in
+@@ -1,5 +1,5 @@
+ SUBSYSTEM=="xen-backend", KERNEL=="tap*", RUN+="@LIBEXEC@/tap $env{ACTION}"
+-SUBSYSTEM=="xen-backend", KERNEL=="vbd*|qdisk*", RUN+="@LIBEXEC@/block $env{ACTION}"
++SUBSYSTEM=="xen-backend", KERNEL=="vbd*|qdisk*|9pfs*", RUN+="@LIBEXEC@/block $env{ACTION}"
+ 
+ SUBSYSTEM=="xen-backend", KERNEL=="vif*", RUN+="@LIBEXEC@/vif $env{ACTION} type_if=vif"
+ SUBSYSTEM=="net",         KERNEL=="tap*", RUN+="@LIBEXEC@/vif $env{ACTION} type_if=tap"
+diff --git a/xc/device.ml b/xc/device.ml
+index 8f1d920f..86e6fb6d 100644
+--- a/xc/device.ml
++++ b/xc/device.ml
+@@ -260,9 +260,13 @@ module Generic = struct
+       (backend_path_of_device ~xs x ^ "/state")
+       (Xenbus_utils.string_of Xenbus_utils.Closed)
+ 
+-  let is_qdisk x =
+-    Hotplug.path_written_by_hotplug_scripts x
+-    |> Astring.String.is_infix ~affix:"backend/qdisk/"
++  let is_backend backend_type path =
++    let affix = Printf.sprintf "backend/%s/" backend_type in
++    Astring.String.is_infix affix path
++
++  let is_qdisk_or_9pfs x =
++    let path = Hotplug.path_written_by_hotplug_scripts x in
++    is_backend "qdisk" path || is_backend "9pfs" path
+ 
+   let on_backend_closed_unplug ~xs x =
+     debug "Device.on_backend_closed_unplug for %s" (string_of_device x) ;
+@@ -290,10 +294,10 @@ module Generic = struct
+     let cancel = Device x in
+     let frontend_closed = Watch.map (fun _ -> ()) (frontend_closed ~xs x) in
+     let unplug =
+-      let qdisk = is_qdisk x in
+-      debug "Device.unplug_watch %s, qdisk=%b" (string_of_device x) qdisk ;
++      let qdisk_or_9pfs = is_qdisk_or_9pfs x in
++      debug "Device.unplug_watch %s, disk=%b" (string_of_device x) qdisk_or_9pfs ;
+       let backend_watch =
+-        if qdisk then [((), on_backend_closed_unplug ~xs x)] else []
++        if qdisk_or_9pfs then [((), on_backend_closed_unplug ~xs x)] else []
+       in
+       let frontend_gone =
+         ( ()
+@@ -343,7 +347,7 @@ module Generic = struct
+     !Xenopsd.run_hotplug_scripts || x.backend.domid > 0
+ 
+   let hard_shutdown_complete ~xs (x : device) =
+-    if is_qdisk x then
++    if is_qdisk_or_9pfs x then
+       safe_rm ~xs (Hotplug.path_written_by_hotplug_scripts x) ;
+     if run_hotplug_scripts x then
+       backend_closed ~xs x
+@@ -704,6 +708,19 @@ module Vbd_Common = struct
+             ("physical-device", physical_device)
+           ; ("physical-device-path", physical_device_path)
+           ]
++    | [vdi; tag; security_model; path] ->
++      List.iter
++        (fun (k, v) -> Hashtbl.replace back_tbl k v)
++        [
++          ("security_model", security_model)
++        ; ("path", path)
++        ];
++
++      List.iter
++        (fun (k, v) -> Hashtbl.replace front_tbl k v)
++        [
++          ("tag", tag)
++        ];
+     | _ ->
+         ()
+     ) ;
+diff --git a/xc/device_common.ml b/xc/device_common.ml
+index 7fc3d723..cf4a4fd4 100644
+--- a/xc/device_common.ml
++++ b/xc/device_common.ml
+@@ -49,7 +49,7 @@ module D = Debug.Make (struct let name = "xenops" end)
+ open D
+ open Printf
+ 
+-let supported_vbd_backends = ["vbd"; "vbd3"; "qdisk"]
++let supported_vbd_backends = ["vbd"; "vbd3"; "qdisk"; "9pfs"]
+ 
+ (* TODO: get from xenopsd config *)
+ 
+@@ -273,6 +273,8 @@ let device_of_backend (backend : endpoint) (domu : Xenctrl.domid) =
+       domid= domu
+     ; kind=
+         ( match backend.kind with
++        | Vbd "9pfs" ->
++            Vbd "9pfs"
+         | Tap | Vbd _ ->
+             default_vbd_frontend_kind
+         | _ ->
+diff --git a/xc/domain.ml b/xc/domain.ml
+index 0d522443..cc65048d 100644
+--- a/xc/domain.ml
++++ b/xc/domain.ml
+@@ -416,7 +416,7 @@ let make ~xc ~xs vm_info vcpus domain_config uuid final_uuid no_sharept =
+               t.Xst.mkdirperms ent perms)
+             dirs
+         in
+-        let device_dirs = ["device"; "device/vbd"; "device/vif"] in
++        let device_dirs = ["device"; "device/vbd"; "device/9pfs"; "device/vif"] in
+         let device_dirs' =
+           let xsi_254 =
+             try List.assoc "netscaler" vm_info.platformdata = "XSI-254"
+diff --git a/xc/xenops_server_xen.ml b/xc/xenops_server_xen.ml
+index 58c6ad18..c04ff670 100644
+--- a/xc/xenops_server_xen.ml
++++ b/xc/xenops_server_xen.ml
+@@ -319,6 +319,8 @@ let params_of_backend backend =
+         (path, [])
+     | _, _, {uri} :: _, xendisk :: _ ->
+         (uri, [("qemu-params", xendisk.Storage_interface.params)])
++    | _, _, _, xendisk :: _ ->
++        ("", [("qemu-params", xendisk.Storage_interface.params)])
+     | _ ->
+         raise
+           (Xenopsd_error
+@@ -4662,7 +4664,7 @@ module Actions = struct
+         let id = Uuidm.to_string (uuid_of_di di) in
+         let update =
+           match kind with
+-          | "vbd" | "vbd3" | "qdisk" ->
++          | "vbd" | "vbd3" | "qdisk" | "9pfs" ->
+               let devid' =
+                 devid
+                 |> int_of_string
+-- 
+2.32.0
+

@@ -1,18 +1,18 @@
 Name:           xenopsd
-Version:        0.150.5.1
+Version:        0.150.9
 Release:        1%{?dist}
 Summary:        Simple VM manager
 License:        LGPL
 URL:            https://github.com/xapi-project/xenopsd
 
-Source0: https://code.citrite.net/rest/archive/latest/projects/XSU/repos/xenopsd/archive?at=v0.150.5.1&format=tar.gz&prefix=xenopsd-0.150.5.1#/xenopsd-0.150.5.1.tar.gz
+Source0: https://code.citrite.net/rest/archive/latest/projects/XSU/repos/xenopsd/archive?at=v0.150.9&format=tar.gz&prefix=xenopsd-0.150.9#/xenopsd-0.150.9.tar.gz
 Source1: SOURCES/xenopsd/xenopsd-xc.service
 Source2: SOURCES/xenopsd/xenopsd-simulator.service
 Source3: SOURCES/xenopsd/xenopsd-sysconfig
 Source4: SOURCES/xenopsd/xenopsd-64-conf
 
 
-Provides: gitsha(https://code.citrite.net/rest/archive/latest/projects/XSU/repos/xenopsd/archive?at=v0.150.5.1&format=tar.gz&prefix=xenopsd-0.150.5.1#/xenopsd-0.150.5.1.tar.gz) = 02173f1b617497c76127c08ac1184d8e901f785d
+Provides: gitsha(https://code.citrite.net/rest/archive/latest/projects/XSU/repos/xenopsd/archive?at=v0.150.9&format=tar.gz&prefix=xenopsd-0.150.9#/xenopsd-0.150.9.tar.gz) = 056cd3e63c214b245132ad17074d29ed355a2fc0
 
 
 BuildRequires:  xs-opam-repo
@@ -39,7 +39,7 @@ Simple VM manager for the xapi toolstack.
 
 %if 0%{?coverage:1}
 %package        cov
-Provides: gitsha(https://code.citrite.net/rest/archive/latest/projects/XSU/repos/xenopsd/archive?at=v0.150.5.1&format=tar.gz&prefix=xenopsd-0.150.5.1#/xenopsd-0.150.5.1.tar.gz) = 02173f1b617497c76127c08ac1184d8e901f785d
+Provides: gitsha(https://code.citrite.net/rest/archive/latest/projects/XSU/repos/xenopsd/archive?at=v0.150.9&format=tar.gz&prefix=xenopsd-0.150.9#/xenopsd-0.150.9.tar.gz) = 056cd3e63c214b245132ad17074d29ed355a2fc0
 Summary: Xenopsd is built with coverage enabled
 %description    cov
 Xenopsd is built with coverage enabled
@@ -47,7 +47,7 @@ Xenopsd is built with coverage enabled
 %endif
 
 %package        xc
-Provides: gitsha(https://code.citrite.net/rest/archive/latest/projects/XSU/repos/xenopsd/archive?at=v0.150.5.1&format=tar.gz&prefix=xenopsd-0.150.5.1#/xenopsd-0.150.5.1.tar.gz) = 02173f1b617497c76127c08ac1184d8e901f785d
+Provides: gitsha(https://code.citrite.net/rest/archive/latest/projects/XSU/repos/xenopsd/archive?at=v0.150.9&format=tar.gz&prefix=xenopsd-0.150.9#/xenopsd-0.150.9.tar.gz) = 056cd3e63c214b245132ad17074d29ed355a2fc0
 Summary:        Xenopsd using xc
 Requires:       %{name} = %{version}-%{release}
 %if 0%{?coverage:1}
@@ -60,22 +60,22 @@ Requires:       emu-manager
 # Semantic versioning: describe acceptable range of qemu versions
 # if a new major version of qemu/qemu.pg is released and xenopsd is still
 # compatible then we just have to update this line and bump the minor for xenopsd
-Requires:       qemu >= 2:2.10.2-4.4.0
-Conflicts:      qemu >= 2:2.10.2-5.0.0
+Requires:       qemu >= 2:4.2.1-4.4.0
+Conflicts:      qemu >= 2:4.2.1-5.0.0
 Obsoletes:      ocaml-xenops-tools
 
 %description    xc
 Simple VM manager for Xen using libxc.
 
 %package        simulator
-Provides: gitsha(https://code.citrite.net/rest/archive/latest/projects/XSU/repos/xenopsd/archive?at=v0.150.5.1&format=tar.gz&prefix=xenopsd-0.150.5.1#/xenopsd-0.150.5.1.tar.gz) = 02173f1b617497c76127c08ac1184d8e901f785d
+Provides: gitsha(https://code.citrite.net/rest/archive/latest/projects/XSU/repos/xenopsd/archive?at=v0.150.9&format=tar.gz&prefix=xenopsd-0.150.9#/xenopsd-0.150.9.tar.gz) = 056cd3e63c214b245132ad17074d29ed355a2fc0
 Summary:        Xenopsd simulator
 Requires:       %{name} = %{version}-%{release}
 %description    simulator
 A synthetic VM manager for testing.
 
 %package        devel
-Provides: gitsha(https://code.citrite.net/rest/archive/latest/projects/XSU/repos/xenopsd/archive?at=v0.150.5.1&format=tar.gz&prefix=xenopsd-0.150.5.1#/xenopsd-0.150.5.1.tar.gz) = 02173f1b617497c76127c08ac1184d8e901f785d
+Provides: gitsha(https://code.citrite.net/rest/archive/latest/projects/XSU/repos/xenopsd/archive?at=v0.150.9&format=tar.gz&prefix=xenopsd-0.150.9#/xenopsd-0.150.9.tar.gz) = 056cd3e63c214b245132ad17074d29ed355a2fc0
 Summary:        Xenopsd library
 
 %description    devel
@@ -83,7 +83,7 @@ A library containing a simulator for xenopsd, for use in unit tests
 of interactions with xenopsd
 
 %package        cli
-Provides: gitsha(https://code.citrite.net/rest/archive/latest/projects/XSU/repos/xenopsd/archive?at=v0.150.5.1&format=tar.gz&prefix=xenopsd-0.150.5.1#/xenopsd-0.150.5.1.tar.gz) = 02173f1b617497c76127c08ac1184d8e901f785d
+Provides: gitsha(https://code.citrite.net/rest/archive/latest/projects/XSU/repos/xenopsd/archive?at=v0.150.9&format=tar.gz&prefix=xenopsd-0.150.9#/xenopsd-0.150.9.tar.gz) = 056cd3e63c214b245132ad17074d29ed355a2fc0
 Summary:        CLI for xenopsd, the xapi toolstack domain manager
 Requires:       %{name} = %{version}-%{release}
 Obsoletes:      xenops-cli
@@ -192,9 +192,31 @@ make install DESTDIR=%{buildroot} QEMU_WRAPPER_DIR=%{_libdir}/xen/bin LIBEXECDIR
 %systemd_postun_with_restart xenopsd-simulator.service
 
 %changelog
-* Fri Jul 16 2021 Ben Anson <ben.anson@citrix.com> - 0.150.5.1-1
+* Tue Oct 12 2021 Christian Lindig <christian.lindig@citrix.com> - 0.150.9-1
+- Add mtu to VIF frontend xs tree (CA-359472)
+
+* Mon Sep 27 2021 Pau Ruiz Safont <pau.safont@citrix.com> - 0.150.8-2
+- Bump package after xs-opam update
+
+* Mon Aug 23 2021 Pau Ruiz Safont <pau.safont@citrix.com> - 0.150.8-1
+- maintenance: opam 2.1.0 compatibility
+- CP-38064: update for rpclib 7 compatibility
+- CP-38064: update usage of epoll to Core 0.14.0
+
+* Fri Jul 16 2021 Edwin Török <edvin.torok@citrix.com> - 0.150.7-1
+- CP-33898: Fix command line with QEMU 4.1.1
+- CA-341686: Don't let QEMU open device read-only
+- CA-341689: Set read-only to cdroms
+- CA-345834: Fix device id to be the same as QEMU
 - CA-351685: improved fix for XSA-354
 - CA-351685: increase default xenopsd quota
+
+* Tue Jul 13 2021 Edwin Török <edvin.torok@citrix.com> - 0.150.6-1
+- Maintenance: fix compiler warning about const
+- CP-37034: add featureset manipulation helpers
+- CP-37034: move TSX handling logic out of xenopsd
+- CP-37282: use xenctrl Max policy for Xen 4.7 compat code
+- CP-37282: Update CI to use Yangtze branch
 
 * Mon Feb 22 2021 Ben Anson <ben.anson@citrix.com> - 0.150.5-1
 - UPD-678 CA-351823 Revert "Avoid sexp_option deprecation warning"

@@ -1,18 +1,18 @@
 Name:           xenopsd
-Version:        0.150.9
-Release:        1.1%{?dist}
+Version:        0.150.12
+Release:        1%{?dist}
 Summary:        Simple VM manager
 License:        LGPL
 URL:            https://github.com/xapi-project/xenopsd
 
-Source0: https://code.citrite.net/rest/archive/latest/projects/XSU/repos/xenopsd/archive?at=v0.150.9&format=tar.gz&prefix=xenopsd-0.150.9#/xenopsd-0.150.9.tar.gz
+Source0: https://code.citrite.net/rest/archive/latest/projects/XSU/repos/xenopsd/archive?at=v0.150.12&format=tar.gz&prefix=xenopsd-0.150.12#/xenopsd-0.150.12.tar.gz
 Source1: SOURCES/xenopsd/xenopsd-xc.service
 Source2: SOURCES/xenopsd/xenopsd-simulator.service
 Source3: SOURCES/xenopsd/xenopsd-sysconfig
 Source4: SOURCES/xenopsd/xenopsd-64-conf
 
 
-Provides: gitsha(https://code.citrite.net/rest/archive/latest/projects/XSU/repos/xenopsd/archive?at=v0.150.9&format=tar.gz&prefix=xenopsd-0.150.9#/xenopsd-0.150.9.tar.gz) = 056cd3e63c214b245132ad17074d29ed355a2fc0
+Provides: gitsha(https://code.citrite.net/rest/archive/latest/projects/XSU/repos/xenopsd/archive?at=v0.150.12&format=tar.gz&prefix=xenopsd-0.150.12#/xenopsd-0.150.12.tar.gz) = 5a5eae4da005787ead2b0eaf860dfa66f6d4e487
 
 
 # XCP-ng patches
@@ -42,7 +42,7 @@ Simple VM manager for the xapi toolstack.
 
 %if 0%{?coverage:1}
 %package        cov
-Provides: gitsha(https://code.citrite.net/rest/archive/latest/projects/XSU/repos/xenopsd/archive?at=v0.150.9&format=tar.gz&prefix=xenopsd-0.150.9#/xenopsd-0.150.9.tar.gz) = 056cd3e63c214b245132ad17074d29ed355a2fc0
+Provides: gitsha(https://code.citrite.net/rest/archive/latest/projects/XSU/repos/xenopsd/archive?at=v0.150.12&format=tar.gz&prefix=xenopsd-0.150.12#/xenopsd-0.150.12.tar.gz) = 5a5eae4da005787ead2b0eaf860dfa66f6d4e487
 Summary: Xenopsd is built with coverage enabled
 %description    cov
 Xenopsd is built with coverage enabled
@@ -50,7 +50,7 @@ Xenopsd is built with coverage enabled
 %endif
 
 %package        xc
-Provides: gitsha(https://code.citrite.net/rest/archive/latest/projects/XSU/repos/xenopsd/archive?at=v0.150.9&format=tar.gz&prefix=xenopsd-0.150.9#/xenopsd-0.150.9.tar.gz) = 056cd3e63c214b245132ad17074d29ed355a2fc0
+Provides: gitsha(https://code.citrite.net/rest/archive/latest/projects/XSU/repos/xenopsd/archive?at=v0.150.12&format=tar.gz&prefix=xenopsd-0.150.12#/xenopsd-0.150.12.tar.gz) = 5a5eae4da005787ead2b0eaf860dfa66f6d4e487
 Summary:        Xenopsd using xc
 Requires:       %{name} = %{version}-%{release}
 %if 0%{?coverage:1}
@@ -71,14 +71,14 @@ Obsoletes:      ocaml-xenops-tools
 Simple VM manager for Xen using libxc.
 
 %package        simulator
-Provides: gitsha(https://code.citrite.net/rest/archive/latest/projects/XSU/repos/xenopsd/archive?at=v0.150.9&format=tar.gz&prefix=xenopsd-0.150.9#/xenopsd-0.150.9.tar.gz) = 056cd3e63c214b245132ad17074d29ed355a2fc0
+Provides: gitsha(https://code.citrite.net/rest/archive/latest/projects/XSU/repos/xenopsd/archive?at=v0.150.12&format=tar.gz&prefix=xenopsd-0.150.12#/xenopsd-0.150.12.tar.gz) = 5a5eae4da005787ead2b0eaf860dfa66f6d4e487
 Summary:        Xenopsd simulator
 Requires:       %{name} = %{version}-%{release}
 %description    simulator
 A synthetic VM manager for testing.
 
 %package        devel
-Provides: gitsha(https://code.citrite.net/rest/archive/latest/projects/XSU/repos/xenopsd/archive?at=v0.150.9&format=tar.gz&prefix=xenopsd-0.150.9#/xenopsd-0.150.9.tar.gz) = 056cd3e63c214b245132ad17074d29ed355a2fc0
+Provides: gitsha(https://code.citrite.net/rest/archive/latest/projects/XSU/repos/xenopsd/archive?at=v0.150.12&format=tar.gz&prefix=xenopsd-0.150.12#/xenopsd-0.150.12.tar.gz) = 5a5eae4da005787ead2b0eaf860dfa66f6d4e487
 Summary:        Xenopsd library
 
 %description    devel
@@ -86,7 +86,7 @@ A library containing a simulator for xenopsd, for use in unit tests
 of interactions with xenopsd
 
 %package        cli
-Provides: gitsha(https://code.citrite.net/rest/archive/latest/projects/XSU/repos/xenopsd/archive?at=v0.150.9&format=tar.gz&prefix=xenopsd-0.150.9#/xenopsd-0.150.9.tar.gz) = 056cd3e63c214b245132ad17074d29ed355a2fc0
+Provides: gitsha(https://code.citrite.net/rest/archive/latest/projects/XSU/repos/xenopsd/archive?at=v0.150.12&format=tar.gz&prefix=xenopsd-0.150.12#/xenopsd-0.150.12.tar.gz) = 5a5eae4da005787ead2b0eaf860dfa66f6d4e487
 Summary:        CLI for xenopsd, the xapi toolstack domain manager
 Requires:       %{name} = %{version}-%{release}
 Obsoletes:      xenops-cli
@@ -195,6 +195,22 @@ make install DESTDIR=%{buildroot} QEMU_WRAPPER_DIR=%{_libdir}/xen/bin LIBEXECDIR
 %systemd_postun_with_restart xenopsd-simulator.service
 
 %changelog
+* Tue May 17 2022 Christian Lindig <christian.lindig@citrix.com> - 0.150.12-1
+- Add featureset to xenopsd VM state
+- Add platformdata to persistent metadata
+- CA-363633: Always take the generation-id directly from xapi
+- CA-363700: update xenopsd platformdata if rtc-timeoffset changes
+- Remove CPUID levelling v1 compat code
+- Upgrade featureset in xenopsd when importing VM state
+- Upgrade VM runtime state when xenopsd restarts
+
+* Fri May 13 2022 Christian Lindig <christian.lindig@citrix.com> - 0.150.11-1
+- CA-366014 UPD-825 pass dm qemu to UEFI qemu, too
+- CA-364138 log when about to stop varstored and varstore-guard
+
+* Fri May 13 2022 Christian Lindig <christian.lindig@citrix.com> - 0.150.10-1
+- CA-361220: xenopsd: introduce TASK.destroy_on_finish
+
 * Mon Dec 20 2021 Samuel Verschelde <stormi-xcp@ylix.fr> - 0.150.9-1.1
 - Sync with CH 8.2.1
 - *** Upstream changelog ***
@@ -220,12 +236,35 @@ make install DESTDIR=%{buildroot} QEMU_WRAPPER_DIR=%{_libdir}/xen/bin LIBEXECDIR
 - - CP-37282: use xenctrl Max policy for Xen 4.7 compat code
 - - CP-37282: Update CI to use Yangtze branch
 
+* Mon Sep 27 2021 Pau Ruiz Safont <pau.safont@citrix.com> - 0.150.8-2
+- Bump package after xs-opam update
+
 * Wed Sep 01 2021 Samuel Verschelde <stormi-xcp@ylix.fr> - 0.150.5.1-1.1
 - Sync with hotfix XS82E031
 - *** Upstream changelog ***
 - * Fri Jul 16 2021 Ben Anson <ben.anson@citrix.com> - 0.150.5.1-1
 - - CA-351685: improved fix for XSA-354
 - - CA-351685: increase default xenopsd quota
+
+* Mon Aug 23 2021 Pau Ruiz Safont <pau.safont@citrix.com> - 0.150.8-1
+- maintenance: opam 2.1.0 compatibility
+- CP-38064: update for rpclib 7 compatibility
+- CP-38064: update usage of epoll to Core 0.14.0
+
+* Fri Jul 16 2021 Edwin Török <edvin.torok@citrix.com> - 0.150.7-1
+- CP-33898: Fix command line with QEMU 4.1.1
+- CA-341686: Don't let QEMU open device read-only
+- CA-341689: Set read-only to cdroms
+- CA-345834: Fix device id to be the same as QEMU
+- CA-351685: improved fix for XSA-354
+- CA-351685: increase default xenopsd quota
+
+* Tue Jul 13 2021 Edwin Török <edvin.torok@citrix.com> - 0.150.6-1
+- Maintenance: fix compiler warning about const
+- CP-37034: add featureset manipulation helpers
+- CP-37034: move TSX handling logic out of xenopsd
+- CP-37282: use xenctrl Max policy for Xen 4.7 compat code
+- CP-37282: Update CI to use Yangtze branch
 
 * Tue May 18 2021 Samuel Verschelde <stormi-xcp@ylix.fr> - 0.150.5-1.1
 - Update for XS82E020
@@ -246,6 +285,26 @@ make install DESTDIR=%{buildroot} QEMU_WRAPPER_DIR=%{_libdir}/xen/bin LIBEXECDIR
 - - CA-347560: move metadata import and add/remove functions outside VM module
 - - CA-347560: Introduce VM_import_metadata atomic and queue the op when needed
 - - CA-347560: Introduce VM.import_metadata_async
+
+* Mon Feb 22 2021 Ben Anson <ben.anson@citrix.com> - 0.150.5-1
+- UPD-678 CA-351823 Revert "Avoid sexp_option deprecation warning"
+- UPD-678 CA-351823 unit test for [@sexp.option] fix
+
+* Wed Feb 17 2021 Ben Anson <ben.anson@citrix.com> - 0.150.4-1
+- CP-28375: Implement soft reset handler for guest kdump support
+- CA-342935: Disengage guest balloon driver and reset PV features on soft reset
+
+* Thu Feb 11 2021 Ben Anson <ben.anson@citrix.com> - 0.150.3-1
+- CA-341518: send error handshake during migration
+- CA-341518: add tmp ids to vm_migrate_op
+- CA-341518: call VM_check_state on tmp VM on a failed VM_migrate
+- Avoid sexp_option deprecation warning
+- CA-332779: verify power state for start/reboot/resume
+- CA-332779: Fix resume unit test due to power-state checks
+- maintenance: reformat
+- CA-347560: move metadata import and add/remove functions outside VM module
+- CA-347560: Introduce VM_import_metadata atomic and queue the op when needed
+- CA-347560: Introduce VM.import_metadata_async
 
 * Wed Dec 16 2020 Samuel Verschelde <stormi-xcp@ylix.fr> - 0.150.2-1.1
 - Security update (XSA 354)

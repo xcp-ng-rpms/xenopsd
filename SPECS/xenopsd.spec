@@ -1,6 +1,6 @@
 Name:           xenopsd
 Version:        0.150.12
-Release:        1%{?dist}
+Release:        1.1%{?dist}
 Summary:        Simple VM manager
 License:        LGPL
 URL:            https://github.com/xapi-project/xenopsd
@@ -195,21 +195,20 @@ make install DESTDIR=%{buildroot} QEMU_WRAPPER_DIR=%{_libdir}/xen/bin LIBEXECDIR
 %systemd_postun_with_restart xenopsd-simulator.service
 
 %changelog
-* Tue May 17 2022 Christian Lindig <christian.lindig@citrix.com> - 0.150.12-1
-- Add featureset to xenopsd VM state
-- Add platformdata to persistent metadata
-- CA-363633: Always take the generation-id directly from xapi
-- CA-363700: update xenopsd platformdata if rtc-timeoffset changes
-- Remove CPUID levelling v1 compat code
-- Upgrade featureset in xenopsd when importing VM state
-- Upgrade VM runtime state when xenopsd restarts
-
-* Fri May 13 2022 Christian Lindig <christian.lindig@citrix.com> - 0.150.11-1
-- CA-366014 UPD-825 pass dm qemu to UEFI qemu, too
-- CA-364138 log when about to stop varstored and varstore-guard
-
-* Fri May 13 2022 Christian Lindig <christian.lindig@citrix.com> - 0.150.10-1
-- CA-361220: xenopsd: introduce TASK.destroy_on_finish
+* Tue Aug 23 2022 Gael Duperrey <gduperrey@vates.fr> - 0.150.12-1.1
+- * Tue May 17 2022 Christian Lindig <christian.lindig@citrix.com> - 0.150.12-1
+- - Add featureset to xenopsd VM state
+- - Add platformdata to persistent metadata
+- - CA-363633: Always take the generation-id directly from xapi
+- - CA-363700: update xenopsd platformdata if rtc-timeoffset changes
+- - Remove CPUID levelling v1 compat code
+- - Upgrade featureset in xenopsd when importing VM state
+- - Upgrade VM runtime state when xenopsd restarts
+- * Fri May 13 2022 Christian Lindig <christian.lindig@citrix.com> - 0.150.11-1
+- - CA-366014 UPD-825 pass dm qemu to UEFI qemu, too
+- - CA-364138 log when about to stop varstored and varstore-guard
+- * Fri May 13 2022 Christian Lindig <christian.lindig@citrix.com> - 0.150.10-1
+- - CA-361220: xenopsd: introduce TASK.destroy_on_finish
 
 * Mon Dec 20 2021 Samuel Verschelde <stormi-xcp@ylix.fr> - 0.150.9-1.1
 - Sync with CH 8.2.1

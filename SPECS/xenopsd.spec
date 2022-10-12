@@ -1,6 +1,6 @@
 Name:           xenopsd
 Version:        0.150.12
-Release:        1.1%{?dist}
+Release:        1.2%{?dist}
 Summary:        Simple VM manager
 License:        LGPL
 URL:            https://github.com/xapi-project/xenopsd
@@ -195,6 +195,9 @@ make install DESTDIR=%{buildroot} QEMU_WRAPPER_DIR=%{_libdir}/xen/bin LIBEXECDIR
 %systemd_postun_with_restart xenopsd-simulator.service
 
 %changelog
+* Wed Oct 12 2022 Samuel Verschelde <stormi-xcp@ylix.fr> - 0.150.12-1.2
+- Rebuild for security update synced from XS82ECU1019$
+
 * Tue Aug 23 2022 Gael Duperrey <gduperrey@vates.fr> - 0.150.12-1.1
 - * Tue May 17 2022 Christian Lindig <christian.lindig@citrix.com> - 0.150.12-1
 - - Add featureset to xenopsd VM state

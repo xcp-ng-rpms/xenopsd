@@ -1,0 +1,47 @@
+From c916a26a1671ed41eadebbf1e42e5a7a9ba11430 Mon Sep 17 00:00:00 2001
+From: Rob Hoes <rob.hoes@citrix.com>
+Date: Tue, 15 Nov 2022 15:00:08 +0000
+Subject: [PATCH 1/2] xenopsd: define uncaught-exception handler
+
+This logs the exception and backtrace if the program exits with an
+uncaught exception.
+
+Signed-off-by: Rob Hoes <rob.hoes@citrix.com>
+(cherry picked from commit 652e46ca3628fbea65a2f8593540ea3cf1db9233)
+---
+ lib/xenopsd.ml | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
+
+diff --git a/lib/xenopsd.ml b/lib/xenopsd.ml
+index 5f8826bea..b161125ff 100644
+--- a/lib/xenopsd.ml
++++ b/lib/xenopsd.ml
+@@ -409,8 +409,25 @@ let configure ?(specific_options = []) ?(specific_essential_paths = [])
+   | `Error m ->
+       error "%s" m ; exit 1
+ 
++let log_raw_backtrace bt =
++  Option.iter
++    (fun slots ->
++      Array.iteri
++        (fun i slot ->
++          Printexc.Slot.format i slot
++          |> Option.iter (fun s -> error "%d. %s" i s)
++        )
++        slots
++    )
++    (Printexc.backtrace_slots bt)
++
++let log_uncaught_exception e bt =
++  error "xenopsd exitted with an uncaught exception: %s" (Printexc.to_string e) ;
++  log_raw_backtrace bt
++
+ let main backend =
+   Printexc.record_backtrace true ;
++  Printexc.set_uncaught_exception_handler log_uncaught_exception ;
+   (* Listen for transferred file descriptors *)
+   let forwarded_server =
+     Xcp_service.make_socket_server (forwarded_path ()) handle_received_fd
+-- 
+2.30.2
+

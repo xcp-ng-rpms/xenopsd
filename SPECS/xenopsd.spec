@@ -1,6 +1,6 @@
 Name:           xenopsd
 Version:        0.150.12
-Release:        1.2%{?dist}
+Release:        1.2.0.fixstartup.1%{?dist}
 Summary:        Simple VM manager
 License:        LGPL
 URL:            https://github.com/xapi-project/xenopsd
@@ -16,7 +16,10 @@ Provides: gitsha(https://code.citrite.net/rest/archive/latest/projects/XSU/repos
 
 
 # XCP-ng patches
-Patch1000:      xenopsd-0.66.0-use-xcp-clipboardd.XCP-ng.patch
+Patch1000:      v0.150.12...0.150-lcm.patch
+Patch1001:      0001-xenopsd-define-uncaught-exception-handler.patch
+Patch1002:      0002-CA-369444-Ensure-xenopsd-still-starts-if-VM-state-up.patch
+Patch1003:      xenopsd-0.66.0-use-xcp-clipboardd.XCP-ng.patch
 
 BuildRequires:  xs-opam-repo
 BuildRequires:  ocaml-xcp-idl-devel

@@ -1,0 +1,40 @@
+From e6a7364729ed9e65b568433dabc6c967dc2f281b Mon Sep 17 00:00:00 2001
+From: Rob Hoes <rob.hoes@citrix.com>
+Date: Tue, 15 Nov 2022 15:15:33 +0000
+Subject: [PATCH 2/2] CA-369444: Ensure xenopsd still starts if VM state
+ upgrade fails
+
+There may be a problem with some VMs, but we must always let xenopsd
+start.
+
+Signed-off-by: Rob Hoes <rob.hoes@citrix.com>
+(cherry picked from commit def684e1873bb0829dd679887900f3b3e6d559b6)
+---
+ lib/xenops_server.ml | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
+
+diff --git a/lib/xenops_server.ml b/lib/xenops_server.ml
+index 0bdf38b5e..eb69388ca 100644
+--- a/lib/xenops_server.ml
++++ b/lib/xenops_server.ml
+@@ -3562,8 +3562,15 @@ let upgrade_internal_state_of_running_vms () =
+   let module B = (val get_backend () : S) in
+   List.iter
+     (fun vm ->
+-      let vm_t = VM_DB.read_exn vm in
+-      B.VM.get_internal_state [] [] vm_t |> B.VM.set_internal_state vm_t
++      try
++        let vm_t = VM_DB.read_exn vm in
++        B.VM.get_internal_state [] [] vm_t |> B.VM.set_internal_state vm_t
++      with
++      | Xenops_interface.Xenopsd_error (Does_not_exist _) ->
++          warn "Missing VM extra metadata for VM %s" vm
++      | e ->
++          warn "VM metadata upgrade failed for VM %s (%s)" vm
++            (Printexc.to_string e)
+     )
+     (VM_DB.ids ())
+ 
+-- 
+2.30.2
+

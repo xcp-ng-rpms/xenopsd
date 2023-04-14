@@ -1,26 +1,22 @@
+%global package_speccommit e56c4e6eda32c5c127be4680222feb761319e8d0
+%global package_srccommit v0.150.14
 Name:           xenopsd
-Version:        0.150.12
-Release:        1%{?dist}
+Version: 0.150.14
+Release: 1%{?xsrel}%{?dist}
 Summary:        Simple VM manager
-License:        LGPL
+License:        LGPL-2.1-or-later WITH OCaml-LGPL-linking-exception
 URL:            https://github.com/xapi-project/xenopsd
-
-Source0: https://code.citrite.net/rest/archive/latest/projects/XSU/repos/xenopsd/archive?at=v0.150.12&format=tar.gz&prefix=xenopsd-0.150.12#/xenopsd-0.150.12.tar.gz
-Source1: SOURCES/xenopsd/xenopsd-xc.service
-Source2: SOURCES/xenopsd/xenopsd-simulator.service
-Source3: SOURCES/xenopsd/xenopsd-sysconfig
-Source4: SOURCES/xenopsd/xenopsd-64-conf
-
-
-Provides: gitsha(https://code.citrite.net/rest/archive/latest/projects/XSU/repos/xenopsd/archive?at=v0.150.12&format=tar.gz&prefix=xenopsd-0.150.12#/xenopsd-0.150.12.tar.gz) = 5a5eae4da005787ead2b0eaf860dfa66f6d4e487
-
+Source0: xenopsd-0.150.14.tar.gz
+Source1: xenopsd-xc.service
+Source2: xenopsd-simulator.service
+Source3: xenopsd-sysconfig
+Source4: xenopsd-64-conf
 
 BuildRequires:  xs-opam-repo
 BuildRequires:  ocaml-xcp-idl-devel
 BuildRequires:  forkexecd-devel
-BuildRequires:  xen-devel
-BuildRequires:  xen-libs-devel
-BuildRequires:  xen-dom0-libs-devel
+BuildRequires:  ocaml-xen-api-libs-transitional-devel
+BuildRequires:  xen-ocaml-devel
 BuildRequires:  python-devel
 BuildRequires:  systemd
 Requires:       message-switch
@@ -28,9 +24,6 @@ Requires:       xen-dom0-tools
 Requires:       python2-scapy
 
 Requires:       jemalloc
-%global _use_internal_dependency_generator 0
-%global __requires_exclude *caml*
-AutoReqProv: no
 
 %{?systemd_requires}
 
@@ -39,7 +32,6 @@ Simple VM manager for the xapi toolstack.
 
 %if 0%{?coverage:1}
 %package        cov
-Provides: gitsha(https://code.citrite.net/rest/archive/latest/projects/XSU/repos/xenopsd/archive?at=v0.150.12&format=tar.gz&prefix=xenopsd-0.150.12#/xenopsd-0.150.12.tar.gz) = 5a5eae4da005787ead2b0eaf860dfa66f6d4e487
 Summary: Xenopsd is built with coverage enabled
 %description    cov
 Xenopsd is built with coverage enabled
@@ -47,7 +39,6 @@ Xenopsd is built with coverage enabled
 %endif
 
 %package        xc
-Provides: gitsha(https://code.citrite.net/rest/archive/latest/projects/XSU/repos/xenopsd/archive?at=v0.150.12&format=tar.gz&prefix=xenopsd-0.150.12#/xenopsd-0.150.12.tar.gz) = 5a5eae4da005787ead2b0eaf860dfa66f6d4e487
 Summary:        Xenopsd using xc
 Requires:       %{name} = %{version}-%{release}
 %if 0%{?coverage:1}
@@ -62,20 +53,18 @@ Requires:       emu-manager
 # compatible then we just have to update this line and bump the minor for xenopsd
 Requires:       qemu >= 2:4.2.1-4.4.0
 Conflicts:      qemu >= 2:4.2.1-5.0.0
-Obsoletes:      ocaml-xenops-tools
+Obsoletes:      ocaml-xenops-tools <= 2.6.0-2
 
 %description    xc
 Simple VM manager for Xen using libxc.
 
 %package        simulator
-Provides: gitsha(https://code.citrite.net/rest/archive/latest/projects/XSU/repos/xenopsd/archive?at=v0.150.12&format=tar.gz&prefix=xenopsd-0.150.12#/xenopsd-0.150.12.tar.gz) = 5a5eae4da005787ead2b0eaf860dfa66f6d4e487
 Summary:        Xenopsd simulator
 Requires:       %{name} = %{version}-%{release}
 %description    simulator
 A synthetic VM manager for testing.
 
 %package        devel
-Provides: gitsha(https://code.citrite.net/rest/archive/latest/projects/XSU/repos/xenopsd/archive?at=v0.150.12&format=tar.gz&prefix=xenopsd-0.150.12#/xenopsd-0.150.12.tar.gz) = 5a5eae4da005787ead2b0eaf860dfa66f6d4e487
 Summary:        Xenopsd library
 
 %description    devel
@@ -83,10 +72,9 @@ A library containing a simulator for xenopsd, for use in unit tests
 of interactions with xenopsd
 
 %package        cli
-Provides: gitsha(https://code.citrite.net/rest/archive/latest/projects/XSU/repos/xenopsd/archive?at=v0.150.12&format=tar.gz&prefix=xenopsd-0.150.12#/xenopsd-0.150.12.tar.gz) = 5a5eae4da005787ead2b0eaf860dfa66f6d4e487
 Summary:        CLI for xenopsd, the xapi toolstack domain manager
 Requires:       %{name} = %{version}-%{release}
-Obsoletes:      xenops-cli
+Obsoletes:      xenops-cli <= 1.8.0-1
 
 %description    cli
 Command-line interface for xenopsd, the xapi toolstack domain manager.
@@ -192,6 +180,17 @@ make install DESTDIR=%{buildroot} QEMU_WRAPPER_DIR=%{_libdir}/xen/bin LIBEXECDIR
 %systemd_postun_with_restart xenopsd-simulator.service
 
 %changelog
+* Mon Feb 27 2023 Pau Ruiz Safont <pau.ruizsafont@cloud.com> - 0.150.14-1
+- test: run as part of the xapi-xenopsd package
+- Reformat for compatibility with xapi
+- CA-369444: Ensure xenopsd still starts if VM state upgrade fails
+- CA-369446: exit with error if add_vswitch_port fails
+- Change license to match the one in the source repo
+- Prepare for next hotfix: build-depend on the transitional libraries
+- Fix xen BuildReqs
+- Remove macro for dependency generator
+- Add last-produced versions of obsoleted packages
+
 * Tue May 17 2022 Christian Lindig <christian.lindig@citrix.com> - 0.150.12-1
 - Add featureset to xenopsd VM state
 - Add platformdata to persistent metadata
@@ -284,9 +283,9 @@ make install DESTDIR=%{buildroot} QEMU_WRAPPER_DIR=%{_libdir}/xen/bin LIBEXECDIR
 - CP-32863: fix hotplug script for storage driver domains
 - CP-32863: make removal idempotent
 - CP-32863: do not get stuck waiting for state to reach closed when key
-	disappears
+    disappears
 - CP-32863: Do not wait for hotplug scripts in Dom0 when plugging in
-	storage driver domains
+    storage driver domains
 
 * Mon Mar 23 2020 Christian Lindig <christian.lindig@citrix.com> - 0.146.0-1
 - CP-33121: replace Opt with Option
@@ -449,7 +448,7 @@ make install DESTDIR=%{buildroot} QEMU_WRAPPER_DIR=%{_libdir}/xen/bin LIBEXECDIR
 - Support multiple vGPUs in resuming.
 
 * Wed May 29 2019 Christian Lindig <christian.lindig@citrix.com> - 0.107.0-1
-- Revert "CA-306943: Revert "CA-297602: Always create a physical-device 
+- Revert "CA-306943: Revert "CA-297602: Always create a physical-device
   node for HVM CD-ROMs""
 - CP-30037: move start_daemon inside DaemonMgmt
 - PV_Vnc: use DaemonMgmt
@@ -550,16 +549,16 @@ make install DESTDIR=%{buildroot} QEMU_WRAPPER_DIR=%{_libdir}/xen/bin LIBEXECDIR
 - CP-28662: use varstored for VM start/stop of UEFI guests
 - CP-28663: build and fix suspend-image-viewer
 - CP-29054: use locked PID files for QEMU
-- CP-29058: use string in Io.read/write to contain 
+- CP-29058: use string in Io.read/write to contain
   Bytes.unsafe_to_string to io.ml
 - CP-28663: implement VM.suspend/resume for UEFI
 - CP-28662: use record instead of string map for NVRAM
-- CP-29056, CP-28662: use pidfile for varstored, drop --init and use 
+- CP-29056, CP-28662: use pidfile for varstored, drop --init and use
   --nonpersistent
 - CA-295520: do not attempt to suspend varstored in Bios mode
 - Add OVMF debug print arguments (commented) for convinience
 - CA-297602: Always create a physical-device node for HVM CD-ROMs
-- CP-29100: Remove PCI Device and expose IO port for communication 
+- CP-29100: Remove PCI Device and expose IO port for communication
   with varstored.
 - CP-29857: Use NVME when platform:device-model=qemu-upstream (#563)
 - CA-301610: fix name for Qemu_upstream_uefi device model
@@ -567,7 +566,7 @@ make install DESTDIR=%{buildroot} QEMU_WRAPPER_DIR=%{_libdir}/xen/bin LIBEXECDIR
 - CP-29936: UEFI: block migration when NVME devices are present (#571)
 - CP-29967: varstored deprivileging
 - CP-29827: drop some trad-compat options (#579)
-- CA-302981, CP-30032: Do not try to stop/destroy varstored chroot in 
+- CA-302981, CP-30032: Do not try to stop/destroy varstored chroot in
   BIOS mode, and sandbox varstore-rm (#584)
 - CA-305090: do not fail on older versions of qemu
 

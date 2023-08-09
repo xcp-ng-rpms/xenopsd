@@ -1,12 +1,12 @@
-%global package_speccommit e56c4e6eda32c5c127be4680222feb761319e8d0
-%global package_srccommit v0.150.14
+%global package_speccommit 5b006f90b4f5891249da42d28efbc0bb913a458c
+%global package_srccommit v0.150.17
 Name:           xenopsd
-Version: 0.150.14
+Version: 0.150.17
 Release: 1%{?xsrel}%{?dist}
 Summary:        Simple VM manager
 License:        LGPL-2.1-or-later WITH OCaml-LGPL-linking-exception
 URL:            https://github.com/xapi-project/xenopsd
-Source0: xenopsd-0.150.14.tar.gz
+Source0: xenopsd-0.150.17.tar.gz
 Source1: xenopsd-xc.service
 Source2: xenopsd-simulator.service
 Source3: xenopsd-sysconfig
@@ -180,6 +180,30 @@ make install DESTDIR=%{buildroot} QEMU_WRAPPER_DIR=%{_libdir}/xen/bin LIBEXECDIR
 %systemd_postun_with_restart xenopsd-simulator.service
 
 %changelog
+* Thu Jul 20 2023 Rob Hoes <rob.hoes@citrix.com> - 0.150.17-1
+- Add cpuid library
+- Introduce functions in CPU feature sets in xenopsd
+- xenopsd: change type of reported CPU feature-sets to an abstract type
+- Remove CPUID tests from xapi and add to xenopsd
+- Offload VM CPU Policy checks to Xen
+
+* Mon Jun 19 2023 Christian Lindig <christian.lindig@citrix.com> - 0.150.16-2
+- Bump release and rebuild
+
+* Thu Jun 08 2023 Christian Lindig <christian.lindig@citrix.com> - 0.150.16-1
+- CA-377824 fix FD leak in xenopsd
+
+* Tue May 16 2023 Christian Lindig <christian.lindig@citrix.com> - 0.150.15-2
+- Bump release and rebuild
+
+* Fri May 12 2023 Christian Lindig <christian.lindig@citrix.com> - 0.150.15-1
+- CP-41796 Close Port 80 (Encrypt Data Transfer During VM Migrations)
+- CP-41796 Close Port 80 (Encrypt Data Transfer During VM Migrations)
+- CP-41796 Close Port 80 (Encrypt Data Transfer During VM Migrations)
+
+* Fri May 12 2023 Christian Lindig <christian.lindig@citrix.com> - 0.150.14-2
+- Bump release and rebuild
+
 * Mon Feb 27 2023 Pau Ruiz Safont <pau.ruizsafont@cloud.com> - 0.150.14-1
 - test: run as part of the xapi-xenopsd package
 - Reformat for compatibility with xapi

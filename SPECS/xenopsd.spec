@@ -1,8 +1,8 @@
-%global package_speccommit 5b006f90b4f5891249da42d28efbc0bb913a458c
+%global package_speccommit 79a53c5df21722b1d8ca0b6455a181555422b998
 %global package_srccommit v0.150.17
 Name:           xenopsd
 Version: 0.150.17
-Release: 1%{?xsrel}%{?dist}
+Release: 2%{?xsrel}%{?dist}
 Summary:        Simple VM manager
 License:        LGPL-2.1-or-later WITH OCaml-LGPL-linking-exception
 URL:            https://github.com/xapi-project/xenopsd
@@ -11,6 +11,7 @@ Source1: xenopsd-xc.service
 Source2: xenopsd-simulator.service
 Source3: xenopsd-sysconfig
 Source4: xenopsd-64-conf
+Patch0:         pygrub.use.runas.flag.patch
 
 BuildRequires:  xs-opam-repo
 BuildRequires:  ocaml-xcp-idl-devel
@@ -106,6 +107,7 @@ make install DESTDIR=%{buildroot} QEMU_WRAPPER_DIR=%{_libdir}/xen/bin LIBEXECDIR
 %doc README.md LICENSE
 %{_sysconfdir}/udev/rules.d/xen-backend.rules
 %{_libdir}/xen/bin/qemu-wrapper
+%{_libdir}/xen/bin/pygrub-wrapper
 %{_libexecdir}/%{name}/vif
 %{_libexecdir}/%{name}/vif-real
 %{_libexecdir}/%{name}/block
@@ -180,6 +182,9 @@ make install DESTDIR=%{buildroot} QEMU_WRAPPER_DIR=%{_libdir}/xen/bin LIBEXECDIR
 %systemd_postun_with_restart xenopsd-simulator.service
 
 %changelog
+* Tue Sep 26 2023 Alejandro Vallejo <alejandro.vallejo@cloud.com> - 0.150.17-2
+- CA-38341: Always invoke pygrub in depriv mode
+
 * Thu Jul 20 2023 Rob Hoes <rob.hoes@citrix.com> - 0.150.17-1
 - Add cpuid library
 - Introduce functions in CPU feature sets in xenopsd

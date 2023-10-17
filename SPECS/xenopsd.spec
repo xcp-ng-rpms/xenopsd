@@ -57,7 +57,7 @@ Requires:       emu-manager
 # compatible then we just have to update this line and bump the minor for xenopsd
 Requires:       qemu >= 2:4.2.1-4.4.0
 Conflicts:      qemu >= 2:4.2.1-5.0.0
-Obsoletes:      ocaml-xenops-tools <= 2.6.0-2
+Obsoletes:      ocaml-xenops-tools <= 2.6.0-3
 
 %description    xc
 Simple VM manager for Xen using libxc.
@@ -78,7 +78,7 @@ of interactions with xenopsd
 %package        cli
 Summary:        CLI for xenopsd, the xapi toolstack domain manager
 Requires:       %{name} = %{version}-%{release}
-Obsoletes:      xenops-cli <= 1.8.0-1
+Obsoletes:      xenops-cli <= 1.8.0-2
 
 %description    cli
 Command-line interface for xenopsd, the xapi toolstack domain manager.
@@ -187,6 +187,7 @@ make install DESTDIR=%{buildroot} QEMU_WRAPPER_DIR=%{_libdir}/xen/bin LIBEXECDIR
 %changelog
 * Fri Oct 13 2023 Samuel Verschelde <stormi-xcp@ylix.fr> - 0.150.17-2.1
 - Security update, synced from hotfix XS82ECU1049
+- Also fix upgrade from XCP-ng 8.1 via yum
 - *** Upstream changelog ***
 - * Tue Sep 26 2023 Alejandro Vallejo <alejandro.vallejo@cloud.com> - 0.150.17-2
 - - CA-38341: Always invoke pygrub in depriv mode

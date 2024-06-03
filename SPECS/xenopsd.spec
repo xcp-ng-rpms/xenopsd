@@ -1,17 +1,16 @@
-%global package_speccommit 79a53c5df21722b1d8ca0b6455a181555422b998
-%global package_srccommit v0.150.17
+%global package_speccommit c8716cdfbfe0e0c2ef74ab5a33611d3780d03d12
+%global package_srccommit v0.150.19
 Name:           xenopsd
-Version: 0.150.17
-Release: 2.1%{?xsrel}%{?dist}
+Version: 0.150.19
+Release: 3.1%{?xsrel}%{?dist}
 Summary:        Simple VM manager
 License:        LGPL-2.1-or-later WITH OCaml-LGPL-linking-exception
 URL:            https://github.com/xapi-project/xenopsd
-Source0: xenopsd-0.150.17.tar.gz
+Source0: xenopsd-0.150.19.tar.gz
 Source1: xenopsd-xc.service
 Source2: xenopsd-simulator.service
 Source3: xenopsd-sysconfig
 Source4: xenopsd-64-conf
-Patch0:         pygrub.use.runas.flag.patch
 
 # XCP-ng patches
 Patch1000:      xenopsd-0.66.0-use-xcp-clipboardd.XCP-ng.patch
@@ -185,6 +184,29 @@ make install DESTDIR=%{buildroot} QEMU_WRAPPER_DIR=%{_libdir}/xen/bin LIBEXECDIR
 %systemd_postun_with_restart xenopsd-simulator.service
 
 %changelog
+* Mon Jun 03 2024 Gael Duperrey <gduperrey@vates.tech> - 0.150.19-3.1
+- Sync with hotfix XS82ECU1064
+- *** Upstream changelog ***
+- * Fri Mar 08 2024 Christian Lindig <christian.lindig@cloud.com> - 0.150.19-3
+- - Bump release and rebuild
+- * Wed Mar 06 2024 Christian Lindig <christian.lindig@cloud.com> - 0.150.19-2
+- - Bump release and rebuild
+- * Tue Mar 05 2024 Christian Lindig <christian.lindig@cloud.com> - 0.150.19-1
+- - CA-382035: Verify commandline items for service process in "pid"
+- * Fri Nov 03 2023 Christian Lindig <christian.lindig@cloud.com> - 0.150.18-5
+- - Bump release and rebuild
+- * Tue Oct 24 2023 Christian Lindig <christian.lindig@cloud.com> - 0.150.18-4
+- - Bump release and rebuild
+- * Tue Oct 24 2023 Christian Lindig <christian.lindig@cloud.com> - 0.150.18-3
+- - Bump release and rebuild
+- * Mon Oct 23 2023 Christian Lindig <christian.lindig@citrix.com> - 0.150.18-2
+- - remove pygrub patch after it was merged
+- * Wed Oct 18 2023 Christian Lindig <christian.lindig@cloud.com> - 0.150.18-1
+- - CA-381503: bump qemu filesize limit
+- - CA-383491: Invoke pygrub in depriv mode
+- - ci: fix run issues
+- - maintenance: apply ocamlformat
+
 * Fri Oct 13 2023 Samuel Verschelde <stormi-xcp@ylix.fr> - 0.150.17-2.1
 - Security update, synced from hotfix XS82ECU1049
 - Also fix upgrade from XCP-ng 8.1 via yum

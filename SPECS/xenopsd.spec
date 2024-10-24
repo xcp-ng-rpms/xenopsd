@@ -1,8 +1,8 @@
-%global package_speccommit c8716cdfbfe0e0c2ef74ab5a33611d3780d03d12
+%global package_speccommit e2c89fd57eb3c7301d72ad5dc46b45c149ccbf00
 %global package_srccommit v0.150.19
 Name:           xenopsd
 Version: 0.150.19
-Release: 3.1%{?xsrel}%{?dist}
+Release: 5.1%{?xsrel}%{?dist}
 Summary:        Simple VM manager
 License:        LGPL-2.1-or-later WITH OCaml-LGPL-linking-exception
 URL:            https://github.com/xapi-project/xenopsd
@@ -184,6 +184,15 @@ make install DESTDIR=%{buildroot} QEMU_WRAPPER_DIR=%{_libdir}/xen/bin LIBEXECDIR
 %systemd_postun_with_restart xenopsd-simulator.service
 
 %changelog
+* Thu Oct 24 2024 Gael Duperrey <gduperrey@vates.tech> - 0.150.19-5.1
+- Rebuild after sync with hotfix XS82ECU1074
+- No source changes: only rebuild for dependencies
+- *** Upstream changelog ***
+- * Thu Aug 29 2024 Christian Lindig <christian.lindig@cloud.com> - 0.150.19-5
+- - Bump release and rebuild
+- * Wed Jun 19 2024 Christian Lindig <christian.lindig@cloud.com> - 0.150.19-4
+- - Bump release and rebuild
+
 * Mon Jun 03 2024 Gael Duperrey <gduperrey@vates.tech> - 0.150.19-3.1
 - Sync with hotfix XS82ECU1064
 - *** Upstream changelog ***
